@@ -67,6 +67,7 @@ paths:
     post:
       tags:
         - internal
+        - external
       summary: adds a Client
       operationId: addClient
       parameters:
@@ -83,6 +84,7 @@ paths:
     put:
       tags:
         - internal
+        - external
       summary: modifies a Client
       operationId: updateClient
       parameters:
