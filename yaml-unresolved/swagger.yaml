@@ -121,7 +121,7 @@ definitions:
       endDate:
         type: string
         format: date-time
-        description: If the client is 'deleted', the end date is set
+        description: If the client is 'deleted', the end date is set UPDATE 2:20
         example: 2018-05-02T14:32:46Z
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
