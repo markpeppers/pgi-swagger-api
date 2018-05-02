@@ -115,6 +115,10 @@ definitions:
         type: string
         description: Human readable name
         example: Widget Industries NA
+      companyId:
+        type: integer
+        description: The company id in Premiere the client is associated to.
+        example: 341233
       startDate:
         type: string
         format: date-time
