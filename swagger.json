@@ -1,0 +1,181 @@
+{
+  "openapi" : "2.0.0",
+  "servers" : [ {
+    "description" : "SwaggerHub API Auto Mocking",
+    "url" : "https://virtserver.swaggerhub.com/mpeppers/PgiClient2/1.0.0"
+  } ],
+  "info" : {
+    "description" : "This is a simple Client API",
+    "version" : "1.0.0",
+    "title" : "Simple Client API",
+    "contact" : {
+      "email" : "mark.peppers@pgi.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "internal",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "external",
+    "description" : "Operations available to regular developers"
+  } ],
+  "paths" : {
+    "/client/{id}" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "id",
+        "description" : "Client Id",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      } ],
+      "get" : {
+        "tags" : [ "internal", "external" ],
+        "summary" : "Get a Client by Id",
+        "operationId" : "getClient",
+        "description" : "Return the requested Client",
+        "responses" : {
+          "200" : {
+            "description" : "success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "bad input parameter"
+          },
+          "404" : {
+            "description" : "client not found"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "internal" ],
+        "summary" : "Deactivate a Client by Id",
+        "operationId" : "deleteClient",
+        "responses" : {
+          "200" : {
+            "description" : "success"
+          },
+          "204" : {
+            "description" : "client already deactivated"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "internal" ],
+        "summary" : "Reactivate a Client by Id",
+        "operationId" : "reactivateClient",
+        "responses" : {
+          "200" : {
+            "description" : "success"
+          },
+          "202" : {
+            "description" : "client already active"
+          },
+          "404" : {
+            "description" : "client not found"
+          }
+        }
+      }
+    },
+    "/client" : {
+      "post" : {
+        "tags" : [ "internal" ],
+        "summary" : "adds a Client",
+        "operationId" : "addClient",
+        "description" : "Adds a Client to the system",
+        "responses" : {
+          "201" : {
+            "description" : "client created"
+          },
+          "400" : {
+            "description" : "invalid input, object invalid"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Client"
+              }
+            }
+          },
+          "description" : "Client to add"
+        }
+      },
+      "put" : {
+        "tags" : [ "internal" ],
+        "summary" : "modifies a Client",
+        "operationId" : "updateClient",
+        "description" : "Modify a Client",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Client"
+              }
+            }
+          },
+          "description" : "New client details"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "client updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Client"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "client not found"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Client" : {
+        "type" : "object",
+        "required" : [ "id", "name" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Human readable name",
+            "example" : "Widget Industries NA"
+          },
+          "startDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "Date that the client is assigned to the current license",
+            "example" : "2017-07-21T17:32:28Z"
+          },
+          "endDate" : {
+            "type" : "string",
+            "format" : "date-time",
+            "description" : "If the client is 'deleted', the end date is set",
+            "example" : "2018-05-02T14:32:46Z"
+          }
+        }
+      }
+    }
+  }
+}
