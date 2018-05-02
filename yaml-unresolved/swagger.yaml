@@ -14,9 +14,9 @@ info:
 # tags are used for organizing operations
 tags:
 - name: internal
-  description: Secured Admin-only calls
+  description: Internal PGi admin calls
 - name: external
-  description: Operations available to regular developers
+  description: API calls available to external resources
 paths:
   /client/{id}:
     parameters:
@@ -105,20 +105,35 @@ definitions:
     type: object
     required:
       - id
-      - name
+      - firstName
+      - lastName
+      - email
+      - timeZone
     properties:
       id:
         type: string
         format: uuid
         example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      name:
+      firstName:
         type: string
         description: Human readable name
-        example: Widget Industries NA
+        example: Howard
+      lastName:
+        type: string
+        description: Human readable name
+        example: Hughes
       companyId:
         type: integer
         description: The company id in Premiere the client is associated to.
         example: 341233
+      email:
+        type: string
+        description: email address for client
+        example: hhughes@twa.com
+      timeZone:
+        type: string
+        description: Time zone for displaying reservations
+        example: MST
       startDate:
         type: string
         format: date-time
