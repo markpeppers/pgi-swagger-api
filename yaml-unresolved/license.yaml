@@ -186,25 +186,26 @@ paths:
         type listed in the request body. It will put an endDate on the
         previously assigned client based on the startDate of the request body.
         TODO - Deal with overlapping changes....
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Client'
+      parameters:
+        - in: path
+          name: id
+          description: UUID of the license
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: client
+          schema:
+            $ref: '#/definitions/Client'
       responses:
         '200':
           description: "Success - License reassigned."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/License'
+          schema:
+            $ref: '#/components/schemas/License'
         '400':
           description: "Error creating license assignment for client (License not active, missing req'd data"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestError'
+          schema:
+            $ref: '#/components/schemas/RestError'
 definitions:
   UpdateLicenseRequest:
     type: object
