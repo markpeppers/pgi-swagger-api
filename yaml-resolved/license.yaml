@@ -120,6 +120,28 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
+  /contract/{contractId}/default:
+    post:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Set contract as the default
+      description: Get a contract by its UUID
+      operationId: getContractByUUID
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Contract set as default. All others set to default = false
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: No contract with the given id was found for your enterprise
   /contract/{id}/licenseset:
     get:
       tags:
@@ -219,6 +241,31 @@ paths:
             $ref: '#/definitions/LicenseSet'
         404:
           description: Not found
+  /contract/{contractId}/licenseset/{licenseSetId}/default:
+    post:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Set this License set as the default
+      description: |
+        Sets the default flag to true for this LicenseSet, and modifies all other
+        licenseSets in this contract as default = false
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/LicenseSet'
 definitions:
   Contract:
     type: object
