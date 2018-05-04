@@ -76,13 +76,27 @@ paths:
           description: filter by client id
           type: string
           format: uuid
-
       responses:
         '200':
           description: "Success"
           schema:
             $ref: '#/definitions/LicenseList'
-
+    post:
+      tags:
+        - License Mgmt - internal
+      summary: Create an unassigned license. Only intended for internal use
+      description: |
+        Creates a new license as part of the licenseSet, without assigning a Client to it. Tightly coupled to the data model, and we probably wouldn't want to expose this complexity to the customer.... INTERNAL USE ONLY
+      parameters:
+        - in: body
+          name: newLicense
+          schema:
+            $ref: '#/definitions/License'
+      responses:
+        '200':
+          description: "Success"
+            schema:
+              $ref: '#/definitions/License'
 definitions:
   LicenseList:
     type: object
