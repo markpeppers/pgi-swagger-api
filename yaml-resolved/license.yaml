@@ -266,6 +266,37 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/LicenseSet'
+  /contract/{contractId}/licenseset/{licenseSetId}/feature:
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Add a feature to a license set
+      description: |
+        Allows contracting to add additional features/addons/etc to the license
+        Set. Id property is ignored.
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      - in: body
+        name: newFeature
+        required: true
+        schema:
+          $ref: '#/definitions/Feature'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/Feature'
+        404:
+          description: Not found
 definitions:
   Contract:
     type: object
@@ -400,6 +431,12 @@ definitions:
         example: 1000 min
         description: Human-readable option name
     description: Defines a licence-able product's feature or add-on.
+    example:
+      name: Included Minutes
+      description: description
+      externalId: 2S5srok3x635
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      option: 1000 min
   Property:
     type: object
     required:
