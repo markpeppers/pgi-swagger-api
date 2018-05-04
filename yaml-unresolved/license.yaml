@@ -97,7 +97,62 @@ paths:
           description: "Success"
           schema:
             $ref: '#/definitions/License'
+  /license/{id}:
+    get:
+      tags:
+        - License Mgmt - internal
+        - License Mgmt - external
+      summary: "Get license by id"
+      parameters:
+        - in: path
+          name: id
+          description: UUID of the license
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/License'
+    post:
+      tags:
+        - License Mgmt - internal
+        - License Mgmt - external
+      summary: "Create a new license with optional client information"
+      description: |
+        Allows an admin to modify the client assignment of an existing license. If a clientId
+        is passed, then the license is assigned to the existing client. If a Client object is
+        passed, a new client will be created and assigned.
+      parameters:
+        - in: path
+          name: id
+          description: UUID of the license
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: licenceUpdate
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateLicenseRequest'
+      responses:
+        '200':
+          description: "Success"
+          schema:
+            $ref: '#/definitions/License'
 definitions:
+  UpdateLicenseRequest:
+    type: object
+    properties:
+      clientId:
+        type: string
+        format: uuid
+      client:
+        $ref: '#/definitions/Client'
+    minProperties: 1  
   LicenseList:
     type: object
     description: paginated list of matching licenses.
