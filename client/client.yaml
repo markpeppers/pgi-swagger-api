@@ -1,0 +1,170 @@
+---
+swagger: "2.0"
+info:
+  description: This is a simple API
+  version: 1.0.0
+  title: PGi Client API
+  contact:
+    email: mark.peppers@pgi.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /mpeppers/PgiClientOAPI2/1.0.0
+tags:
+- name: internal
+  description: Internal PGi admin calls
+- name: external
+  description: API calls available to external resources
+schemes:
+- https
+paths:
+  /client/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get a Client by Id
+      description: return the requested Client
+      operationId: getClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Client'
+        404:
+          description: client not found
+    put:
+      tags:
+      - internal
+      summary: reactivate a Client by Id
+      operationId: reactivateClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: client already active
+        404:
+          description: client not found
+    delete:
+      tags:
+      - internal
+      summary: deactivate a client by Id
+      operationId: deleteClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: client already deactivated
+        404:
+          description: client not found
+  /client:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds a Client
+      operationId: addClient
+      parameters:
+      - in: body
+        name: newClient
+        description: client to add
+        required: false
+        schema:
+          $ref: '#/definitions/Client'
+      responses:
+        201:
+          description: client created
+        400:
+          description: invalid input, object invalid
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Client
+      operationId: updateClient
+      parameters:
+      - in: body
+        name: updatedClient
+        description: updated client
+        required: false
+        schema:
+          $ref: '#/definitions/Client'
+      responses:
+        200:
+          description: client updated
+          schema:
+            $ref: '#/definitions/Client'
+        404:
+          description: client not found
+definitions:
+  Client:
+    type: object
+    required:
+    - email
+    - firstName
+    - id
+    - lastName
+    - timeZone
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      firstName:
+        type: string
+        example: Howard
+        description: Human readable name
+      lastName:
+        type: string
+        example: Hughes
+        description: Human readable name
+      companyId:
+        type: integer
+        example: 341233
+        description: The company id in Premiere the client is associated to.
+      email:
+        type: string
+        example: hhughes@twa.com
+        description: email address for client
+      timeZone:
+        type: string
+        example: MST
+        description: Time zone for displaying reservations
+      startDate:
+        type: string
+        format: date-time
+        example: 2017-07-21T17:32:28Z
+        description: Date that the client is assigned to the current license
+      endDate:
+        type: string
+        format: date-time
+        example: 2018-05-02T14:32:46Z
+        description: If the client is 'deleted', the end date is set UPDATE 2:20
+    example:
+      firstName: Howard
+      lastName: Hughes
+      companyId: 341233
+      endDate: 2018-05-02T14:32:46Z
+      timeZone: MST
+      id: d290f1ee-6c54-4b01-90e6-d701748f0851
+      email: hhughes@twa.com
+      startDate: 2017-07-21T17:32:28Z
