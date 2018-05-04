@@ -19,6 +19,53 @@ tags:
 schemes:
 - https
 paths:
+  /contract:
+    get:
+      tags:
+      - License Mgmt - external
+      - License Mgmt - internal
+      description: |
+        Lists all contracts which are active and belong to the same enterprise as the current user, or all for super-users.
+      operationId: listContracts
+      parameters:
+      - name: enterpriseid
+        in: query
+        description: Optional filter to only retrieve contracts assigned to a specific enterprise
+        required: false
+        type: string
+      responses:
+        200:
+          description: List of contracts matching the enterprise, or empty list if none.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contract'
+        401:
+          description: Not Authenticated
+        403:
+          description: Not authorized to view contracts for the requested enterprise
+        500:
+          description: Server error
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Create a new Contract
+      description: Adds a Contract to the system
+      operationId: addContract
+      parameters: []
+      responses:
+        201:
+          description: Contract Created
+        400:
+          description: Invalid input. Check error response for additional details
+        409:
+          description: Contract already exists for this externalId
+        401:
+          description: Not Authenticated
+        403:
+          description: Not authorized to view contracts for the requested enterprise
+        500:
+          description: Internal Server Error
   /contract/{id}/licenseset:
     get:
       tags:
@@ -119,6 +166,53 @@ paths:
         404:
           description: Not found
 definitions:
+  Contract:
+    type: object
+    required:
+    - default
+    - enterpriseId
+    - externalId
+    - name
+    - source
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        description: System generated UUID. You are not able to create or update this value via the API. It is ignored in all PUT/POST/PATCH methods
+        readOnly: true
+      name:
+        type: string
+        example: Hosted Voice with Global Meet
+        maxLength: 256
+      source:
+        type: string
+        description: Source system for contract creation/ownership
+        enum:
+        - iContract
+      externalId:
+        type: string
+        format: uuid
+        example: a023800000ZUQCW
+        description: Unique identifier from source system, like the salesforce iContract id.
+      enterpriseId:
+        type: string
+        description: Id of top level enterprise. User authorization must include access rights to the enterprise to access contracts.
+      default:
+        type: boolean
+        description: |
+          Flag to determine if this is the default contract to be used for operations. If you update this flag to
+          be true, then all other contracts belonging to the enterprise will be set to default=false
+    description: |
+      Represents the base Contract (Agreement), which is assigned to an Enterprise (top level of company
+      heirarchy)
+    example:
+      default: true
+      name: Hosted Voice with Global Meet
+      externalId: a023800000ZUQCW
+      id: d290f1ee-6c54-4b01-90e6-d701748f0851
+      source: iContract
+      enterpriseId: enterpriseId
   LicenseSet:
     type: object
     required:
