@@ -12,10 +12,10 @@ info:
 host: virtserver.swaggerhub.com
 basePath: /mpeppers/LicenseAPI/1.0.0
 tags:
-- name: admins
-  description: Secured Admin-only calls
-- name: developers
-  description: Operations available to regular developers
+- name: License Mgmt - external
+  description: Operations available to external applications (mavenir)
+- name: License Mgmt - internal
+  description: Internal api calls that may be used by an internal API (with knowledge of the data system)
 schemes:
 - https
 paths:
