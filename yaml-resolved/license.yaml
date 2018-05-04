@@ -50,14 +50,21 @@ paths:
       tags:
       - License Mgmt - internal
       summary: Create a new Contract
-      description: Adds a Contract to the system
+      description: Contract item to add.
       operationId: addContract
-      parameters: []
+      parameters:
+      - in: body
+        name: newContract
+        required: false
+        schema:
+          $ref: '#/definitions/Contract'
       responses:
         201:
           description: Contract Created
         400:
           description: Invalid input. Check error response for additional details
+          schema:
+            $ref: '#/definitions/RestError'
         409:
           description: Contract already exists for this externalId
         401:
@@ -309,6 +316,35 @@ definitions:
         type: string
       value:
         type: string
+  RestError:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: System error code (not HTTP status)
+      message:
+        type: string
+        description: Error message
+      extended:
+        type: string
+        description: extended error information (system related)
+    description: |
+      Error response details
+
+      * 1xx - contract error message
+      * 2xx - LicenseSet error messages
+      * 3xx - License and client assignment errors
+        * 310 - License is not active
+        * 320 - A client with the given source type already assigned to this license
+        * 35x - Option errors...
+          * 350 - Invalid option group (does not exist in parent)
+          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
+          * 352 - No option specified for group, and default does not exist
+          * 353 - Multiple default options specified in OptionGroup.
+          * 354 - No default option specified in OptionGroup
+      * 5xx - general errors
+        * 500 - Unexpected server error
+        * 501 - Missing required values, see extended information
   TODO:
     type: object
     properties:
