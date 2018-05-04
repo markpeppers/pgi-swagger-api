@@ -1,9 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  description: This is the license API
+  description: This is the Contract API
   version: 1.0.0
-  title: PGi License API
+  title: PGi Contract API
   contact:
     email: mark.peppers@pgi.com
   license:
