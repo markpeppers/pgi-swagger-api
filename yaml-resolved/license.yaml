@@ -1,0 +1,225 @@
+---
+swagger: "2.0"
+info:
+  description: This is the license API
+  version: 1.0.0
+  title: PGi License API
+  contact:
+    email: mark.peppers@pgi.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /mpeppers/LicenseAPI/1.0.0
+tags:
+- name: admins
+  description: Secured Admin-only calls
+- name: developers
+  description: Operations available to regular developers
+schemes:
+- https
+paths:
+  /contract/{id}/licenseset:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: List all licenseSets for contract
+      description: List all license-able components for a particular contract
+      operationId: listLicenseSets
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. If no results found, empty list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Create license set
+      description: Adds a new licenseSet under the specified contract
+      operationId: addLicenseSet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: newLicense
+        required: true
+        schema:
+          $ref: '#/definitions/LicenseSet'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/LicenseSet'
+  /contract/{contractId}/licenseset/{licenseSetId}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: List all licenseSets for contract
+      description: List all license-able components for a particular contract
+      operationId: listLicenseSetsByContract
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+    patch:
+      tags:
+      - License Mgmt - internal
+      summary: Update limited licenseSet details
+      description: |
+        Internal usage only to modify some attributes: may include
+        updates to the model and model properties. (No access to options available...)
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      - in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/TODO'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+definitions:
+  LicenseSet:
+    type: object
+    required:
+    - model
+    - name
+    properties:
+      name:
+        type: string
+        example: Global Meet
+        maxLength: 256
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+        readOnly: true
+      externalId:
+        type: string
+        description: External System id. Sent in processing messages
+      contractId:
+        type: string
+        description: Contract to which this sub component (license set) belongs. A single contract may contain multiple, independently licensable products.
+        readOnly: true
+      model:
+        type: string
+        description: 'License model that is applied to the component. Master Service
+          Agreement, fixed license count, min/max license:'
+        enum:
+        - msa
+        - fixed
+        - minMax
+      modelProperties:
+        type: array
+        description: 'Array of properties that associated to alicense model (i.e.:
+          min, max). Values are dependent on license model used'
+        items:
+          $ref: '#/definitions/Property'
+      features:
+        type: array
+        description: 'Optional list of features that can be selected during license
+          assignment. '
+        items:
+          $ref: '#/definitions/Feature'
+      default:
+        type: boolean
+        description: Flag to determine if this is the 'default' license set to be used in the UI. No effect on API calls
+    example:
+      id: 2352-sdf24-235d9-0heyTh3re
+      name: Global Meet Web
+      externalId: asdfalwirj2o3iruo8u9283u4wej
+      contractId: 598e-2kjla4-I3thlkj4
+      model: minMax
+      modelProperties:
+      - min: 30
+        max: 50
+      features:
+      - featureName: participants
+        description: Max web participants
+        externalId: 123abc-sku
+        name: 10 Users
+      default: false
+  Feature:
+    type: object
+    required:
+    - description
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System assigned name for this feature
+      name:
+        type: string
+        example: Included Minutes
+        description: Hooman-readable name for this feature
+      description:
+        type: string
+        description: Hooman-readable description for this feature
+      externalId:
+        type: string
+        example: 2S5srok3x635
+        description: Reference ID for this option value. In most cases relates to a rated 'SKU' in a billing system
+      option:
+        type: string
+        example: 1000 min
+        description: Human-readable option name
+    description: Defines a licence-able product's feature or add-on.
+  Property:
+    type: object
+    required:
+    - name
+    - value
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+  TODO:
+    type: object
+    properties:
+      thing:
+        type: string
+    description: all references to this need to be replaced
+    example:
+      thing: thing
