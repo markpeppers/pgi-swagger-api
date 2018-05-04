@@ -73,6 +73,53 @@ paths:
           description: Not authorized to view contracts for the requested enterprise
         500:
           description: Internal Server Error
+  /contract/{contractId}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Get a contract by id
+      description: Get a contract by its UUID
+      operationId: getContract
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Contract found
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: No contract with the given id was found for your enterprise
+    put:
+      tags:
+      - License Mgmt - internal
+      summary: Update a contract by id
+      description: Update a Contract
+      operationId: updateContract
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: updatedContract
+        required: true
+        schema:
+          $ref: '#/definitions/Contract'
+      responses:
+        200:
+          description: Contract successfully updated
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: Not found
   /contract/{id}/licenseset:
     get:
       tags:
