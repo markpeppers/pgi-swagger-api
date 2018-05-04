@@ -62,6 +62,12 @@ paths:
         - internal
       summary: reactivate a Client by Id
       operationId: reactivateClient
+      parameters:
+        - in: path
+          name: id
+          description: Client Id
+          required: true
+          type: string
       responses:
         200:
           description: success
