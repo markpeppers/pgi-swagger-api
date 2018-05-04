@@ -19,12 +19,6 @@ tags:
   description: API calls available to external resources
 paths:
   /client/{id}:
-    parameters:
-      - in: path
-        name: id
-        description: Client Id
-        required: true
-        type: string
     get:
       tags:
         - internal
@@ -32,6 +26,12 @@ paths:
       summary: Get a Client by Id
       operationId: getClient
       description: return the requested Client
+      parameters:
+        - in: path
+          name: id
+          description: Client Id
+          required: true
+          type: string
       responses:
         200:
           description: success
@@ -44,6 +44,12 @@ paths:
         - internal
       summary: deactivate a client by Id
       operationId: deleteClient
+      parameters:
+        - in: path
+          name: id
+          description: Client Id
+          required: true
+          type: string
       responses:
         200:
           description: success
