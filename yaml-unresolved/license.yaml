@@ -172,10 +172,8 @@ paths:
             Unable to create new client assignment. Please see error resonse
              code and message for more details (License already has assigned client from this source, missing
              required data, license not active)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RestError'
+          schema:
+            $ref: '#/components/schemas/RestError'
     put:
       tags:
         - License Mgmt - internal
