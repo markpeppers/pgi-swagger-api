@@ -113,10 +113,8 @@ paths:
       responses:
         '200':
           description: "Success"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/License'
+          schema:
+            $ref: '#/definitions/License'
     post:
       tags:
         - License Mgmt - internal
@@ -143,6 +141,70 @@ paths:
           description: "Success"
           schema:
             $ref: '#/definitions/License'
+  /license/{id}/client:
+    post:
+      tags:
+        - License Mgmt - internal
+      summary: "Assign client information to the license. Add new client (based on source) to unassigned license"
+      description: |
+        This call will only work against a license that is unassigned.
+    parameters:
+      - in: path
+        name: id
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/Client'
+      responses:
+        '200':
+          description: OK - License assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/License'
+        '400':
+          description: |
+            Unable to create new client assignment. Please see error resonse
+             code and message for more details (License already has assigned client from this source, missing
+             required data, license not active)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
+    put:
+      tags:
+        - License Mgmt - internal
+        - License Mgmt - external
+      summary: "Change the client currently assigned to this license"
+      description: |
+        This call will change the assigned client information for the source
+        type listed in the request body. It will put an endDate on the
+        previously assigned client based on the startDate of the request body.
+        TODO - Deal with overlapping changes....
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: "Success - License reassigned."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/License'
+        '400':
+          description: "Error creating license assignment for client (License not active, missing req'd data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RestError'
 definitions:
   UpdateLicenseRequest:
     type: object
