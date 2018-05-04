@@ -95,8 +95,8 @@ paths:
       responses:
         '200':
           description: "Success"
-            schema:
-              $ref: '#/definitions/License'
+          schema:
+            $ref: '#/definitions/License'
 definitions:
   LicenseList:
     type: object
