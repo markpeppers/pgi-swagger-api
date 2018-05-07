@@ -1,7 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  description: This is a simple API
+  description: This is the PGi Client API
   version: 1.0.0
   title: PGi Client API
   contact:
@@ -10,7 +10,7 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
 host: virtserver.swaggerhub.com
-basePath: /mpeppers/PgiClientOAPI2/1.0.0
+basePath: /mpeppers/PGiClientAPI/1.0.0
 tags:
 - name: internal
   description: Internal PGi admin calls
