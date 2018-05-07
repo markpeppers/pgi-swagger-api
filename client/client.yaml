@@ -40,24 +40,6 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
-    put:
-      tags:
-      - internal
-      summary: reactivate a Client by Id
-      operationId: reactivateClient
-      parameters:
-      - name: id
-        in: path
-        description: Client Id
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-        202:
-          description: client already active
-        404:
-          description: client not found
     delete:
       tags:
       - internal
@@ -76,6 +58,7 @@ paths:
           description: client already deactivated
         404:
           description: client not found
+  /client/reactivate/{id}: {}
   /client:
     post:
       tags:
