@@ -223,15 +223,20 @@ paths:
           description: Not found
   /licenses/search/enterprise/{enterpriseId}:
     get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
       parameters:
       - name: enterpriseId
-        in: query
+        in: path
         description: Returns all licenses associated with an enterprise
-        required: false
+        required: true
         type: string
       responses:
         200:
           description: success
+          schema:
+            $ref: '#/definitions/TODO'
   /license:
     get:
       tags:
@@ -338,20 +343,20 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
-  /license/{licensesetId}:
+  /license/licenseSet{licenseSetId}:
     post:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
-      summary: Create a new license with optional client information
+      summary: Create a new license in the given licenseSet with optional client information
       description: |
         Allows an admin to modify the client assignment of an existing license. If a clientId
         is passed, then the license is assigned to the existing client. If a Client object is
         passed, a new client will be created and assigned.
       parameters:
-      - name: licenseId
+      - name: licenseSetId
         in: path
-        description: UUID of the license
+        description: UUID of the licenseSet
         required: true
         type: string
         format: uuid
