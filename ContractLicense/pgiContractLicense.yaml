@@ -1,9 +1,9 @@
 ---
 swagger: "2.0"
 info:
-  description: This is the Contract API
+  description: This is the Contract/License API
   version: 1.0.0
-  title: PGi Contract API
+  title: PGi Contract/License API
   contact:
     email: mark.peppers@pgi.com
   license:
@@ -19,61 +19,7 @@ tags:
 schemes:
 - https
 paths:
-  /contract:
-    get:
-      tags:
-      - License Mgmt - external
-      - License Mgmt - internal
-      description: |
-        Lists all contracts which are active and belong to the same enterprise as the current user, or all for super-users.
-      operationId: listContracts
-      parameters:
-      - name: enterpriseid
-        in: query
-        description: Optional filter to only retrieve contracts assigned to a specific enterprise
-        required: false
-        type: string
-      responses:
-        200:
-          description: List of contracts matching the enterprise, or empty list if none.
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Contract'
-        401:
-          description: Not Authenticated
-        403:
-          description: Not authorized to view contracts for the requested enterprise
-        500:
-          description: Server error
-    post:
-      tags:
-      - License Mgmt - internal
-      summary: Create a new Contract
-      description: Contract item to add.
-      operationId: addContract
-      parameters:
-      - in: body
-        name: newContract
-        required: false
-        schema:
-          $ref: '#/definitions/Contract'
-      responses:
-        201:
-          description: Contract Created
-        400:
-          description: Invalid input. Check error response for additional details
-          schema:
-            $ref: '#/definitions/RestError'
-        409:
-          description: Contract already exists for this externalId
-        401:
-          description: Not Authenticated
-        403:
-          description: Not authorized to view contracts for the requested enterprise
-        500:
-          description: Internal Server Error
-  /contract/{contractId}:
+  /contract/{enterpriseId}:
     get:
       tags:
       - License Mgmt - internal
@@ -82,7 +28,7 @@ paths:
       description: Get a contract by its UUID
       operationId: getContract
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: UUID of contract to be fetched
         required: true
@@ -102,7 +48,7 @@ paths:
       description: Update a Contract
       operationId: updateContract
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: UUID of contract to be fetched
         required: true
@@ -120,29 +66,7 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
-  /contract/{contractId}/default:
-    post:
-      tags:
-      - License Mgmt - internal
-      - License Mgmt - external
-      summary: Set contract as the default
-      description: Get a contract by its UUID
-      operationId: getContractByUUID
-      parameters:
-      - name: contractId
-        in: path
-        description: UUID of contract to be fetched
-        required: true
-        type: string
-        format: uuid
-      responses:
-        200:
-          description: Contract set as default. All others set to default = false
-          schema:
-            $ref: '#/definitions/Contract'
-        404:
-          description: No contract with the given id was found for your enterprise
-  /contract/{id}/licenseset:
+  /contract/{contractId}/licenseset:
     get:
       tags:
       - License Mgmt - internal
@@ -151,7 +75,7 @@ paths:
       description: List all license-able components for a particular contract
       operationId: listLicenseSets
       parameters:
-      - name: id
+      - name: contractId
         in: path
         required: true
         type: string
@@ -171,7 +95,7 @@ paths:
       description: Adds a new licenseSet under the specified contract
       operationId: addLicenseSet
       parameters:
-      - name: id
+      - name: contractId
         in: path
         required: true
         type: string
@@ -190,8 +114,8 @@ paths:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
-      summary: List all licenseSets for contract
-      description: List all license-able components for a particular contract
+      summary: Get a specific licenseSet from this contract
+      description: Get a specific licenseSet
       operationId: listLicenseSetsByContract
       parameters:
       - name: contractId
