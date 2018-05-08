@@ -66,7 +66,7 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
-  /contract/{contractId}/licenseset:
+  /contract/{enterpriseId}/licenseset:
     get:
       tags:
       - License Mgmt - internal
@@ -75,7 +75,7 @@ paths:
       description: List all license-able components for a particular contract
       operationId: listLicenseSets
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         required: true
         type: string
@@ -95,7 +95,7 @@ paths:
       description: Adds a new licenseSet under the specified contract
       operationId: addLicenseSet
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         required: true
         type: string
@@ -109,7 +109,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/LicenseSet'
-  /contract/{contractId}/licenseset/{licenseSetId}:
+  /contract/{enterpriseId}/licenseset/{licenseSetId}:
     get:
       tags:
       - License Mgmt - internal
@@ -118,7 +118,7 @@ paths:
       description: Get a specific licenseSet
       operationId: listLicenseSetsByContract
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -143,7 +143,7 @@ paths:
         Internal usage only to modify some attributes: may include
         updates to the model and model properties. (No access to options available...)
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -165,7 +165,7 @@ paths:
             $ref: '#/definitions/LicenseSet'
         404:
           description: Not found
-  /contract/{contractId}/licenseset/{licenseSetId}/default:
+  /contract/{enterpriseId}/licenseset/{licenseSetId}/default:
     post:
       tags:
       - License Mgmt - internal
@@ -175,7 +175,7 @@ paths:
         Sets the default flag to true for this LicenseSet, and modifies all other
         licenseSets in this contract as default = false
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -190,7 +190,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/LicenseSet'
-  /contract/{contractId}/licenseset/{licenseSetId}/feature:
+  /contract/{enterpriseId}/licenseset/{licenseSetId}/feature:
     post:
       tags:
       - License Mgmt - internal
@@ -199,7 +199,7 @@ paths:
         Allows contracting to add additional features/addons/etc to the license
         Set. Id property is ignored.
       parameters:
-      - name: contractId
+      - name: enterpriseId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -221,6 +221,17 @@ paths:
             $ref: '#/definitions/Feature'
         404:
           description: Not found
+  /licenses/search/enterprise/{enterpriseId}:
+    get:
+      parameters:
+      - name: enterpriseId
+        in: query
+        description: Returns all licenses associated with an enterprise
+        required: false
+        type: string
+      responses:
+        200:
+          description: success
   /license:
     get:
       tags:
@@ -309,14 +320,14 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
-  /license/{id}:
+  /license/{licenseId}:
     get:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
       summary: Get license by id
       parameters:
-      - name: id
+      - name: licenseId
         in: path
         description: UUID of the license
         required: true
@@ -327,6 +338,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
+  /license/{licensesetId}:
     post:
       tags:
       - License Mgmt - internal
@@ -337,7 +349,7 @@ paths:
         is passed, then the license is assigned to the existing client. If a Client object is
         passed, a new client will be created and assigned.
       parameters:
-      - name: id
+      - name: licenseId
         in: path
         description: UUID of the license
         required: true
