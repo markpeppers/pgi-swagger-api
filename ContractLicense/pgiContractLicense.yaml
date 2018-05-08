@@ -1,0 +1,956 @@
+---
+swagger: "2.0"
+info:
+  description: This is the Contract API
+  version: 1.0.0
+  title: PGi Contract API
+  contact:
+    email: mark.peppers@pgi.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /mpeppers/PGiContractLicenseAPI/1.0.0
+tags:
+- name: License Mgmt - external
+  description: Operations available to external applications (mavenir)
+- name: License Mgmt - internal
+  description: Internal api calls that may be used by an internal API (with knowledge of the data system)
+schemes:
+- https
+paths:
+  /contract:
+    get:
+      tags:
+      - License Mgmt - external
+      - License Mgmt - internal
+      description: |
+        Lists all contracts which are active and belong to the same enterprise as the current user, or all for super-users.
+      operationId: listContracts
+      parameters:
+      - name: enterpriseid
+        in: query
+        description: Optional filter to only retrieve contracts assigned to a specific enterprise
+        required: false
+        type: string
+      responses:
+        200:
+          description: List of contracts matching the enterprise, or empty list if none.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contract'
+        401:
+          description: Not Authenticated
+        403:
+          description: Not authorized to view contracts for the requested enterprise
+        500:
+          description: Server error
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Create a new Contract
+      description: Contract item to add.
+      operationId: addContract
+      parameters:
+      - in: body
+        name: newContract
+        required: false
+        schema:
+          $ref: '#/definitions/Contract'
+      responses:
+        201:
+          description: Contract Created
+        400:
+          description: Invalid input. Check error response for additional details
+          schema:
+            $ref: '#/definitions/RestError'
+        409:
+          description: Contract already exists for this externalId
+        401:
+          description: Not Authenticated
+        403:
+          description: Not authorized to view contracts for the requested enterprise
+        500:
+          description: Internal Server Error
+  /contract/{contractId}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Get a contract by id
+      description: Get a contract by its UUID
+      operationId: getContract
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Contract found
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: No contract with the given id was found for your enterprise
+    put:
+      tags:
+      - License Mgmt - internal
+      summary: Update a contract by id
+      description: Update a Contract
+      operationId: updateContract
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: updatedContract
+        required: true
+        schema:
+          $ref: '#/definitions/Contract'
+      responses:
+        200:
+          description: Contract successfully updated
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: Not found
+  /contract/{contractId}/default:
+    post:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Set contract as the default
+      description: Get a contract by its UUID
+      operationId: getContractByUUID
+      parameters:
+      - name: contractId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Contract set as default. All others set to default = false
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: No contract with the given id was found for your enterprise
+  /contract/{id}/licenseset:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: List all licenseSets for contract
+      description: List all license-able components for a particular contract
+      operationId: listLicenseSets
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success. If no results found, empty list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Create license set
+      description: Adds a new licenseSet under the specified contract
+      operationId: addLicenseSet
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: newLicense
+        required: true
+        schema:
+          $ref: '#/definitions/LicenseSet'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/LicenseSet'
+  /contract/{contractId}/licenseset/{licenseSetId}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: List all licenseSets for contract
+      description: List all license-able components for a particular contract
+      operationId: listLicenseSetsByContract
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+    patch:
+      tags:
+      - License Mgmt - internal
+      summary: Update limited licenseSet details
+      description: |
+        Internal usage only to modify some attributes: may include
+        updates to the model and model properties. (No access to options available...)
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      - in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/TODO'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/LicenseSet'
+        404:
+          description: Not found
+  /contract/{contractId}/licenseset/{licenseSetId}/default:
+    post:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Set this License set as the default
+      description: |
+        Sets the default flag to true for this LicenseSet, and modifies all other
+        licenseSets in this contract as default = false
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/LicenseSet'
+  /contract/{contractId}/licenseset/{licenseSetId}/feature:
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Add a feature to a license set
+      description: |
+        Allows contracting to add additional features/addons/etc to the license
+        Set. Id property is ignored.
+      parameters:
+      - name: contractId
+        in: path
+        description: Id of the enterprise contract.
+        required: true
+        type: string
+      - name: licenseSetId
+        in: path
+        description: Id of the License Set.
+        required: true
+        type: string
+      - in: body
+        name: newFeature
+        required: true
+        schema:
+          $ref: '#/definitions/Feature'
+      responses:
+        200:
+          description: Success.
+          schema:
+            $ref: '#/definitions/Feature'
+        404:
+          description: Not found
+  /license:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: search licenses
+      description: |
+        Returns all licenses that are visible to the user. Can be filtered to show licenses
+        assigned for a specific company (if user has access to multiple companies), by
+        license set (GM5, Audio, etc), or by
+        Result set includes pagination information
+      operationId: listLicense
+      parameters:
+      - name: limit
+        in: query
+        description: Number of rows to return per page.
+        required: false
+        type: integer
+      - name: page
+        in: query
+        description: page number (1 based)
+        required: false
+        type: integer
+      - name: sort
+        in: query
+        description: sort attributes
+        required: false
+        type: string
+      - name: dir
+        in: query
+        description: 'Sort direction; ascending or descending order. Default: ascending.'
+        required: false
+        type: string
+        enum:
+        - asc
+        - desc
+      - name: companyid
+        in: query
+        description: filter by companyId
+        required: false
+        type: string
+        format: uuid
+      - name: licensesetid
+        in: query
+        description: filter by license set id
+        required: false
+        type: string
+        format: uuid
+      - name: activeonly
+        in: query
+        description: should results include only active license assignments (defaults to true)
+        required: false
+        type: boolean
+        default: true
+      - name: contractid
+        in: query
+        description: filter by contract id
+        required: false
+        type: string
+        format: uuid
+      - name: clientid
+        in: query
+        description: filter by client id
+        required: false
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/LicenseList'
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Create an unassigned license. Only intended for internal use
+      description: |
+        Creates a new license as part of the licenseSet, without assigning a Client to it. Tightly coupled to the data model, and we probably wouldn't want to expose this complexity to the customer.... INTERNAL USE ONLY
+      parameters:
+      - in: body
+        name: newLicense
+        required: false
+        schema:
+          $ref: '#/definitions/License'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/License'
+  /license/{id}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Get license by id
+      parameters:
+      - name: id
+        in: path
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/License'
+    post:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Create a new license with optional client information
+      description: |
+        Allows an admin to modify the client assignment of an existing license. If a clientId
+        is passed, then the license is assigned to the existing client. If a Client object is
+        passed, a new client will be created and assigned.
+      parameters:
+      - name: id
+        in: path
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: licenceUpdate
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateLicenseRequest'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/License'
+  /license/{id}/client:
+    post:
+      tags:
+      - License Mgmt - internal
+      summary: Assign client information to the license. Add new client (based on source) to unassigned license
+      description: |
+        This call will only work against a license that is unassigned.
+      parameters:
+      - name: id
+        in: path
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/Client'
+      responses:
+        200:
+          description: OK - License assigned
+          schema:
+            $ref: '#/definitions/License'
+        400:
+          description: |
+            Unable to create new client assignment. Please see error resonse
+             code and message for more details (License already has assigned client from this source, missing
+             required data, license not active)
+          schema:
+            $ref: '#/definitions/RestError'
+    put:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Change the client currently assigned to this license
+      description: |
+        This call will change the assigned client information for the source
+        type listed in the request body. It will put an endDate on the
+        previously assigned client based on the startDate of the request body.
+        TODO - Deal with overlapping changes....
+      parameters:
+      - name: id
+        in: path
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: client
+        required: false
+        schema:
+          $ref: '#/definitions/Client'
+      responses:
+        200:
+          description: Success - License reassigned.
+          schema:
+            $ref: '#/definitions/License'
+        400:
+          description: Error creating license assignment for client (License not active, missing req'd data
+          schema:
+            $ref: '#/definitions/RestError'
+    delete:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Remove all current client assignments from license
+      description: |
+        if the license model includes a minimum count, and removing the client
+        does not violate the minimum, (or no minimum) then end the client relationship
+        and marks the license as deleted.
+
+        If the license model does have a minimum, and deleting the client violates that,
+        then just marks the client as deleted and leaves the license as active and resets
+        options to defaults (We wouldn't actually expect a min/max license type to have
+        options however...)
+
+        If the license model is an MSA, then delete the license.
+
+        (All deletes are soft-deletes, btw)
+      parameters:
+      - name: id
+        in: path
+        description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Success - License assignments removed. License may be marked as deleted.
+          schema:
+            $ref: '#/definitions/License'
+definitions:
+  UpdateLicenseRequest:
+    type: object
+    properties:
+      clientId:
+        type: string
+        format: uuid
+      client:
+        $ref: '#/definitions/Client'
+    example:
+      clientId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      client:
+        endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
+  LicenseList:
+    type: object
+    properties:
+      pagination:
+        $ref: '#/definitions/Pagination'
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/License'
+    description: paginated list of matching licenses.
+    example:
+      pagination:
+        last: true
+        size: 5
+        totalPages: 6
+        limit: 1
+        page: 5
+        dir: dir
+        totalElements: 0
+      results:
+      - features:
+        - name: Included Minutes
+          description: description
+          externalId: 2S5srok3x635
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          option: 1000 min
+        - name: Included Minutes
+          description: description
+          externalId: 2S5srok3x635
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          option: 1000 min
+        licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        companyId: companyId
+        endDate: 2000-01-23
+        canAdd: true
+        licenseAssignments:
+        - endDate: 2000-01-23
+          name: name
+          externalId: externalId
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source: gm5
+          startDate: 2000-01-23
+        - endDate: 2000-01-23
+          name: name
+          externalId: externalId
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source: gm5
+          startDate: 2000-01-23
+        licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        startDate: 2000-01-23
+      - features:
+        - name: Included Minutes
+          description: description
+          externalId: 2S5srok3x635
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          option: 1000 min
+        - name: Included Minutes
+          description: description
+          externalId: 2S5srok3x635
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          option: 1000 min
+        licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        companyId: companyId
+        endDate: 2000-01-23
+        canAdd: true
+        licenseAssignments:
+        - endDate: 2000-01-23
+          name: name
+          externalId: externalId
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source: gm5
+          startDate: 2000-01-23
+        - endDate: 2000-01-23
+          name: name
+          externalId: externalId
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          source: gm5
+          startDate: 2000-01-23
+        licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        startDate: 2000-01-23
+  License:
+    type: object
+    required:
+    - licenseSetId
+    properties:
+      licenseId:
+        type: string
+        format: uuid
+        description: 'System generated UUID for the billable license '
+      licenseSetId:
+        type: string
+        format: uuid
+        description: License set id
+      companyId:
+        type: string
+      startDate:
+        type: string
+        format: date
+        description: Date that this license assignment is in effect.
+      endDate:
+        type: string
+        format: date
+        description: Date that this license assignment ends (delete)
+      features:
+        type: array
+        description: |
+          Optional array of license features, if applicable
+        items:
+          $ref: '#/definitions/Feature'
+      canAdd:
+        type: boolean
+        description: |
+          There are additional licenses that can be assigned in this set. (Based on license model and current data.) This will need to allow for different licensing models (min/max, msa, fixed) and take into account both number of assigned licenses and number of unassigned licenses as part of the calculation.
+      licenseAssignments:
+        type: array
+        description: |
+          License Assignments represent the recent history of all client
+          Ids that have been assigned to this license. These records
+          are primary used by Mediation Clients to map received CDR data
+          to the appropriate billable license
+        items:
+          $ref: '#/definitions/Client'
+    example:
+      features:
+      - name: Included Minutes
+        description: description
+        externalId: 2S5srok3x635
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        option: 1000 min
+      - name: Included Minutes
+        description: description
+        externalId: 2S5srok3x635
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        option: 1000 min
+      licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      companyId: companyId
+      endDate: 2000-01-23
+      canAdd: true
+      licenseAssignments:
+      - endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
+      - endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
+      licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
+  Contract:
+    type: object
+    required:
+    - default
+    - enterpriseId
+    - externalId
+    - name
+    - source
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        description: System generated UUID. You are not able to create or update this value via the API. It is ignored in all PUT/POST/PATCH methods
+        readOnly: true
+      name:
+        type: string
+        example: Hosted Voice with Global Meet
+        maxLength: 256
+      source:
+        type: string
+        description: Source system for contract creation/ownership
+        enum:
+        - iContract
+      externalId:
+        type: string
+        format: uuid
+        example: a023800000ZUQCW
+        description: Unique identifier from source system, like the salesforce iContract id.
+      enterpriseId:
+        type: string
+        description: Id of top level enterprise. User authorization must include access rights to the enterprise to access contracts.
+      default:
+        type: boolean
+        description: |
+          Flag to determine if this is the default contract to be used for operations. If you update this flag to
+          be true, then all other contracts belonging to the enterprise will be set to default=false
+    description: |
+      Represents the base Contract (Agreement), which is assigned to an Enterprise (top level of company
+      heirarchy)
+    example:
+      default: true
+      name: Hosted Voice with Global Meet
+      externalId: a023800000ZUQCW
+      id: d290f1ee-6c54-4b01-90e6-d701748f0851
+      source: iContract
+      enterpriseId: enterpriseId
+  LicenseSet:
+    type: object
+    required:
+    - model
+    - name
+    properties:
+      name:
+        type: string
+        example: Global Meet
+        maxLength: 256
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+        readOnly: true
+      externalId:
+        type: string
+        description: External System id. Sent in processing messages
+      contractId:
+        type: string
+        description: Contract to which this sub component (license set) belongs. A single contract may contain multiple, independently licensable products.
+        readOnly: true
+      model:
+        type: string
+        description: 'License model that is applied to the component. Master Service
+          Agreement, fixed license count, min/max license:'
+        enum:
+        - msa
+        - fixed
+        - minMax
+      modelProperties:
+        type: array
+        description: 'Array of properties that associated to alicense model (i.e.:
+          min, max). Values are dependent on license model used'
+        items:
+          $ref: '#/definitions/Property'
+      features:
+        type: array
+        description: 'Optional list of features that can be selected during license
+          assignment. '
+        items:
+          $ref: '#/definitions/Feature'
+      default:
+        type: boolean
+        description: Flag to determine if this is the 'default' license set to be used in the UI. No effect on API calls
+    example:
+      id: 2352-sdf24-235d9-0heyTh3re
+      name: Global Meet Web
+      externalId: asdfalwirj2o3iruo8u9283u4wej
+      contractId: 598e-2kjla4-I3thlkj4
+      model: minMax
+      modelProperties:
+      - min: 30
+        max: 50
+      features:
+      - featureName: participants
+        description: Max web participants
+        externalId: 123abc-sku
+        name: 10 Users
+      default: false
+  Client:
+    type: object
+    required:
+    - source
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      source:
+        type: string
+        description: |
+          Source system for identifying actual provisioned client. This value must be one of the supported
+          systems in order to tie license information to specific, supported provisioning systems for purposes
+          of license creation.
+        enum:
+        - gm5
+        - mavenir
+        - somethingElse
+        - talkpoint
+      externalId:
+        type: string
+        description: Unique identifier of client in source system. May not apply for unlinked/unprovisioned client sources..
+      name:
+        type: string
+        description: Hooman readable name for use in identifying client records. (Admin use only?? Synchronizing? etc)
+      startDate:
+        type: string
+        format: date
+        description: Date that this client is assigned to the current license
+      endDate:
+        type: string
+        format: date
+        description: |
+          If the client assignment to the license is 'deleted', then the end date
+          is set.
+        readOnly: true
+    example:
+      endDate: 2000-01-23
+      name: name
+      externalId: externalId
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
+      startDate: 2000-01-23
+  Feature:
+    type: object
+    required:
+    - description
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System assigned name for this feature
+      name:
+        type: string
+        example: Included Minutes
+        description: Hooman-readable name for this feature
+      description:
+        type: string
+        description: Hooman-readable description for this feature
+      externalId:
+        type: string
+        example: 2S5srok3x635
+        description: Reference ID for this option value. In most cases relates to a rated 'SKU' in a billing system
+      option:
+        type: string
+        example: 1000 min
+        description: Human-readable option name
+    description: Defines a licence-able product's feature or add-on.
+    example:
+      name: Included Minutes
+      description: description
+      externalId: 2S5srok3x635
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      option: 1000 min
+  Property:
+    type: object
+    required:
+    - name
+    - value
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+  Pagination:
+    type: object
+    properties:
+      last:
+        type: boolean
+        description: is last page?
+      totalElements:
+        type: integer
+        description: total rows that matched search criteria
+      totalPages:
+        type: integer
+        description: total number of pages in search results
+      limit:
+        type: integer
+        description: number or rows per page in original search criteria
+      size:
+        type: integer
+        description: number of items in the current page
+      page:
+        type: integer
+        description: current page number
+      dir:
+        type: string
+        description: sort criteria in request
+    example:
+      last: true
+      size: 5
+      totalPages: 6
+      limit: 1
+      page: 5
+      dir: dir
+      totalElements: 0
+  RestError:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: System error code (not HTTP status)
+      message:
+        type: string
+        description: Error message
+      extended:
+        type: string
+        description: extended error information (system related)
+    description: |
+      Error response details
+
+      * 1xx - contract error message
+      * 2xx - LicenseSet error messages
+      * 3xx - License and client assignment errors
+        * 310 - License is not active
+        * 320 - A client with the given source type already assigned to this license
+        * 35x - Option errors...
+          * 350 - Invalid option group (does not exist in parent)
+          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
+          * 352 - No option specified for group, and default does not exist
+          * 353 - Multiple default options specified in OptionGroup.
+          * 354 - No default option specified in OptionGroup
+      * 5xx - general errors
+        * 500 - Unexpected server error
+        * 501 - Missing required values, see extended information
+  TODO:
+    type: object
+    properties:
+      thing:
+        type: string
+    description: all references to this need to be replaced
+    example:
+      thing: thing
