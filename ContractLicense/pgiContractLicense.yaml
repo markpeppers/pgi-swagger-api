@@ -417,6 +417,10 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
+        210:
+          description: max licenses already assigned for this licenseSet
+          schema:
+            $ref: '#/definitions/RestError'
   /license/{licenseId}/client:
     post:
       tags:
@@ -754,6 +758,10 @@ definitions:
         type: string
         description: Contract to which this sub component (license set) belongs. A single contract may contain multiple, independently licensable products.
         readOnly: true
+      enterpriseId:
+        type: string
+        description: In the case of a LicenseSet belonging to a Provider Contract, the provider may assign license sets to multpile enterprises.
+        readOnly: true
       model:
         type: string
         description: 'License model that is applied to the component. Master Service
@@ -927,6 +935,7 @@ definitions:
 
       * 1xx - contract error message
       * 2xx - LicenseSet error messages
+        * 210 - Max number of licenses reached for this licenseSet
       * 3xx - License and client assignment errors
         * 310 - License is not active
         * 320 - A client with the given source type already assigned to this license
