@@ -354,7 +354,7 @@ paths:
         200:
           description: Success
           schema:
-            $ref: '#/definitions/LicenseList'
+            $ref: '#/definitions/LicenseSet'
     post:
       tags:
       - License Mgmt - internal
@@ -366,7 +366,7 @@ paths:
         name: newLicense
         required: false
         schema:
-          $ref: '#/definitions/License'
+          $ref: '#/definitions/LicenseSet'
       responses:
         200:
           description: Success
@@ -463,7 +463,7 @@ paths:
         - in: body
           name: client
           schema:
-            $ref: '#/definitions/Client'
+            $ref: 'https://api.swaggerhub.com/domains/mpeppers/PGICommon/1.0.01#/definitions/Client'
       parameters:
       - name: licenseId
         in: path
@@ -511,176 +511,6 @@ paths:
           schema:
             $ref: '#/definitions/License'
 definitions:
-  UpdateLicenseRequest:
-    type: object
-    properties:
-      clientId:
-        type: string
-        format: uuid
-      client:
-        $ref: '#/definitions/Client'
-    example:
-      clientId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      client:
-        endDate: 2000-01-23
-        name: name
-        externalId: externalId
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        source: gm5
-        startDate: 2000-01-23
-  LicenseList:
-    type: object
-    properties:
-      pagination:
-        $ref: '#/definitions/Pagination'
-      results:
-        type: array
-        items:
-          $ref: '#/definitions/License'
-    description: paginated list of matching licenses.
-    example:
-      pagination:
-        last: true
-        size: 5
-        totalPages: 6
-        limit: 1
-        page: 5
-        dir: dir
-        totalElements: 0
-      results:
-      - features:
-        - name: Included Minutes
-          description: description
-          externalId: 2S5srok3x635
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          option: 1000 min
-        - name: Included Minutes
-          description: description
-          externalId: 2S5srok3x635
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          option: 1000 min
-        licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        companyId: companyId
-        endDate: 2000-01-23
-        canAdd: true
-        licenseAssignments:
-        - endDate: 2000-01-23
-          name: name
-          externalId: externalId
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          source: gm5
-          startDate: 2000-01-23
-        - endDate: 2000-01-23
-          name: name
-          externalId: externalId
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          source: gm5
-          startDate: 2000-01-23
-        licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        startDate: 2000-01-23
-      - features:
-        - name: Included Minutes
-          description: description
-          externalId: 2S5srok3x635
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          option: 1000 min
-        - name: Included Minutes
-          description: description
-          externalId: 2S5srok3x635
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          option: 1000 min
-        licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        companyId: companyId
-        endDate: 2000-01-23
-        canAdd: true
-        licenseAssignments:
-        - endDate: 2000-01-23
-          name: name
-          externalId: externalId
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          source: gm5
-          startDate: 2000-01-23
-        - endDate: 2000-01-23
-          name: name
-          externalId: externalId
-          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          source: gm5
-          startDate: 2000-01-23
-        licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        startDate: 2000-01-23
-  License:
-    type: object
-    required:
-    - licenseSetId
-    properties:
-      licenseId:
-        type: string
-        format: uuid
-        description: 'System generated UUID for the billable license '
-      licenseSetId:
-        type: string
-        format: uuid
-        description: License set id
-      companyId:
-        type: string
-      startDate:
-        type: string
-        format: date
-        description: Date that this license assignment is in effect.
-      endDate:
-        type: string
-        format: date
-        description: Date that this license assignment ends (delete)
-      features:
-        type: array
-        description: |
-          Optional array of license features, if applicable
-        items:
-          $ref: '#/definitions/Feature'
-      canAdd:
-        type: boolean
-        description: |
-          There are additional licenses that can be assigned in this set. (Based on license model and current data.) This will need to allow for different licensing models (min/max, msa, fixed) and take into account both number of assigned licenses and number of unassigned licenses as part of the calculation.
-      licenseAssignments:
-        type: array
-        description: |
-          License Assignments represent the recent history of all client
-          Ids that have been assigned to this license. These records
-          are primary used by Mediation Clients to map received CDR data
-          to the appropriate billable license
-        items:
-          $ref: '#/definitions/Client'
-    example:
-      features:
-      - name: Included Minutes
-        description: description
-        externalId: 2S5srok3x635
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        option: 1000 min
-      - name: Included Minutes
-        description: description
-        externalId: 2S5srok3x635
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        option: 1000 min
-      licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      companyId: companyId
-      endDate: 2000-01-23
-      canAdd: true
-      licenseAssignments:
-      - endDate: 2000-01-23
-        name: name
-        externalId: externalId
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        source: gm5
-        startDate: 2000-01-23
-      - endDate: 2000-01-23
-        name: name
-        externalId: externalId
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        source: gm5
-        startDate: 2000-01-23
-      licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      startDate: 2000-01-23
   Contract:
     type: object
     required:
@@ -800,6 +630,129 @@ definitions:
         externalId: 123abc-sku
         name: 10 Users
       default: false
+  Property:
+    type: object
+    required:
+    - name
+    - value
+    properties:
+      name:
+        type: string
+      value:
+        type: string
+  Feature:
+    type: object
+    required:
+    - description
+    - name
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System assigned name for this feature
+      name:
+        type: string
+        example: Included Minutes
+        description: Hooman-readable name for this feature
+      description:
+        type: string
+        description: Hooman-readable description for this feature
+      externalId:
+        type: string
+        example: 2S5srok3x635
+        description: Reference ID for this option value. In most cases relates to a rated 'SKU' in a billing system
+      option:
+        type: string
+        example: 1000 min
+        description: Human-readable option name
+    description: Defines a licence-able product's feature or add-on.
+    example:
+      name: Included Minutes
+      description: description
+      externalId: 2S5srok3x635
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      option: 1000 min
+  TODO:
+    type: object
+    properties:
+      thing:
+        type: string
+    description: all references to this need to be replaced
+    example:
+      thing: thing
+  License:
+    type: object
+    required:
+    - licenseSetId
+    properties:
+      licenseId:
+        type: string
+        format: uuid
+        description: 'System generated UUID for the billable license '
+      licenseSetId:
+        type: string
+        format: uuid
+        description: License set id
+      companyId:
+        type: string
+      startDate:
+        type: string
+        format: date
+        description: Date that this license assignment is in effect.
+      endDate:
+        type: string
+        format: date
+        description: Date that this license assignment ends (delete)
+      features:
+        type: array
+        description: |
+          Optional array of license features, if applicable
+        items:
+          $ref: '#/definitions/Feature'
+      canAdd:
+        type: boolean
+        description: |
+          There are additional licenses that can be assigned in this set. (Based on license model and current data.) This will need to allow for different licensing models (min/max, msa, fixed) and take into account both number of assigned licenses and number of unassigned licenses as part of the calculation.
+      licenseAssignments:
+        type: array
+        description: |
+          License Assignments represent the recent history of all client
+          Ids that have been assigned to this license. These records
+          are primary used by Mediation Clients to map received CDR data
+          to the appropriate billable license
+        items:
+          $ref: '#/definitions/Client'
+    example:
+      features:
+      - name: Included Minutes
+        description: description
+        externalId: 2S5srok3x635
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        option: 1000 min
+      - name: Included Minutes
+        description: description
+        externalId: 2S5srok3x635
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        option: 1000 min
+      licenseSetId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      companyId: companyId
+      endDate: 2000-01-23
+      canAdd: true
+      licenseAssignments:
+      - endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
+      - endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
+      licenseId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
   Client:
     type: object
     required:
@@ -844,80 +797,23 @@ definitions:
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
       startDate: 2000-01-23
-  Feature:
+  UpdateLicenseRequest:
     type: object
-    required:
-    - description
-    - name
     properties:
-      id:
+      clientId:
         type: string
         format: uuid
-        description: System assigned name for this feature
-      name:
-        type: string
-        example: Included Minutes
-        description: Hooman-readable name for this feature
-      description:
-        type: string
-        description: Hooman-readable description for this feature
-      externalId:
-        type: string
-        example: 2S5srok3x635
-        description: Reference ID for this option value. In most cases relates to a rated 'SKU' in a billing system
-      option:
-        type: string
-        example: 1000 min
-        description: Human-readable option name
-    description: Defines a licence-able product's feature or add-on.
+      client:
+        $ref: '#/definitions/Client'
     example:
-      name: Included Minutes
-      description: description
-      externalId: 2S5srok3x635
-      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      option: 1000 min
-  Property:
-    type: object
-    required:
-    - name
-    - value
-    properties:
-      name:
-        type: string
-      value:
-        type: string
-  Pagination:
-    type: object
-    properties:
-      last:
-        type: boolean
-        description: is last page?
-      totalElements:
-        type: integer
-        description: total rows that matched search criteria
-      totalPages:
-        type: integer
-        description: total number of pages in search results
-      limit:
-        type: integer
-        description: number or rows per page in original search criteria
-      size:
-        type: integer
-        description: number of items in the current page
-      page:
-        type: integer
-        description: current page number
-      dir:
-        type: string
-        description: sort criteria in request
-    example:
-      last: true
-      size: 5
-      totalPages: 6
-      limit: 1
-      page: 5
-      dir: dir
-      totalElements: 0
+      clientId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      client:
+        endDate: 2000-01-23
+        name: name
+        externalId: externalId
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        source: gm5
+        startDate: 2000-01-23
   RestError:
     type: object
     properties:
@@ -948,11 +844,3 @@ definitions:
       * 5xx - general errors
         * 500 - Unexpected server error
         * 501 - Missing required values, see extended information
-  TODO:
-    type: object
-    properties:
-      thing:
-        type: string
-    description: all references to this need to be replaced
-    example:
-      thing: thing
