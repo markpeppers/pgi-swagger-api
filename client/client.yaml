@@ -120,52 +120,44 @@ definitions:
   Client:
     type: object
     required:
-    - email
-    - firstName
-    - id
-    - lastName
-    - timeZone
+    - source
     properties:
       id:
         type: string
         format: uuid
-        example: d290f1ee-6c54-4b01-90e6-d701748f0851
-      firstName:
+        description: System generated UUID
+      source:
         type: string
-        example: Howard
-        description: Human readable name
-      lastName:
+        description: |
+          Source system for identifying actual provisioned client. This value must be one of the supported
+          systems in order to tie license information to specific, supported provisioning systems for purposes
+          of license creation.
+        enum:
+        - gm5
+        - mavenir
+        - somethingElse
+        - talkpoint
+      externalId:
         type: string
-        example: Hughes
-        description: Human readable name
-      companyId:
-        type: integer
-        example: 341233
-        description: The company id in Premiere the client is associated to.
-      email:
+        description: Unique identifier of client in source system. May not apply for unlinked/unprovisioned client sources..
+      name:
         type: string
-        example: hhughes@twa.com
-        description: email address for client
-      timeZone:
-        type: string
-        example: MST
-        description: Time zone for displaying reservations
+        description: Hooman readable name for use in identifying client records. (Admin use only?? Synchronizing? etc)
       startDate:
         type: string
-        format: date-time
-        example: 2017-07-21T17:32:28Z
-        description: Date that the client is assigned to the current license
+        format: date
+        description: Date that this client is assigned to the current license
       endDate:
         type: string
-        format: date-time
-        example: 2018-05-02T14:32:46Z
-        description: If the client is 'deleted', the end date is set UPDATE 2:20
+        format: date
+        description: |
+          If the client assignment to the license is 'deleted', then the end date
+          is set.
+        readOnly: true
     example:
-      firstName: Howard
-      lastName: Hughes
-      companyId: 341233
-      endDate: 2018-05-02T14:32:46Z
-      timeZone: MST
-      id: d290f1ee-6c54-4b01-90e6-d701748f0851
-      email: hhughes@twa.com
-      startDate: 2017-07-21T17:32:28Z
+      endDate: 2000-01-23
+      name: name
+      externalId: externalId
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
+      startDate: 2000-01-23
