@@ -343,7 +343,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
-  /license/licenseSet{licenseSetId}:
+  /license/licenseSet/{licenseSetId}:
     post:
       tags:
       - License Mgmt - internal
@@ -370,7 +370,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
-  /license/{id}/client:
+  /license/{licenseSetId}/client:
     post:
       tags:
       - License Mgmt - internal
@@ -378,7 +378,7 @@ paths:
       description: |
         This call will only work against a license that is unassigned.
       parameters:
-      - name: id
+      - name: licenseSetId
         in: path
         description: UUID of the license
         required: true
@@ -412,7 +412,7 @@ paths:
         previously assigned client based on the startDate of the request body.
         TODO - Deal with overlapping changes....
       parameters:
-      - name: id
+      - name: licenseSetId
         in: path
         description: UUID of the license
         required: true
@@ -451,7 +451,7 @@ paths:
 
         (All deletes are soft-deletes, btw)
       parameters:
-      - name: id
+      - name: licenseSetId
         in: path
         description: UUID of the license
         required: true
@@ -636,8 +636,9 @@ definitions:
   Contract:
     type: object
     required:
+    - contractType
     - default
-    - enterpriseId
+    - entityId
     - externalId
     - name
     - source
@@ -662,9 +663,15 @@ definitions:
         format: uuid
         example: a023800000ZUQCW
         description: Unique identifier from source system, like the salesforce iContract id.
-      enterpriseId:
+      contractType:
         type: string
-        description: Id of top level enterprise. User authorization must include access rights to the enterprise to access contracts.
+        description: Denotes whether this contract is associated with an enterprise or with a provider
+        enum:
+        - enterprise
+        - provider
+      entityId:
+        type: string
+        description: Id of this contract's associated top-level enterprise or provider, depending on its contractType.
       default:
         type: boolean
         description: |
@@ -675,11 +682,12 @@ definitions:
       heirarchy)
     example:
       default: true
+      contractType: enterprise
       name: Hosted Voice with Global Meet
       externalId: a023800000ZUQCW
+      entityId: entityId
       id: d290f1ee-6c54-4b01-90e6-d701748f0851
       source: iContract
-      enterpriseId: enterpriseId
   LicenseSet:
     type: object
     required:
