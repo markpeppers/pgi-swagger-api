@@ -24,7 +24,7 @@ paths:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
-      summary: Get a contract by id
+      summary: Get a contract by enterprise id
       description: Get a contract by its UUID
       operationId: getContractByEnterprise
       parameters:
@@ -44,7 +44,7 @@ paths:
     put:
       tags:
       - License Mgmt - internal
-      summary: Update a contract by id
+      summary: Update a contract by enterprise id
       description: Update a Contract
       operationId: updateContractByEnterprise
       parameters:
@@ -113,7 +113,7 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
-  /contract/{enterpriseId}/licenseset:
+  /contract/{contractId}/licenseset:
     get:
       tags:
       - License Mgmt - internal
@@ -122,7 +122,7 @@ paths:
       description: List all license-able components for a particular contract
       operationId: listLicenseSets
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         required: true
         type: string
@@ -142,7 +142,7 @@ paths:
       description: Adds a new licenseSet under the specified contract
       operationId: addLicenseSet
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         required: true
         type: string
@@ -156,7 +156,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/LicenseSet'
-  /contract/{enterpriseId}/licenseset/{licenseSetId}:
+  /contract/{contractId}/licenseset/{licenseSetId}:
     get:
       tags:
       - License Mgmt - internal
@@ -165,7 +165,7 @@ paths:
       description: Get a specific licenseSet
       operationId: listLicenseSetsByContract
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -190,7 +190,7 @@ paths:
         Internal usage only to modify some attributes: may include
         updates to the model and model properties. (No access to options available...)
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -212,7 +212,7 @@ paths:
             $ref: '#/definitions/LicenseSet'
         404:
           description: Not found
-  /contract/{enterpriseId}/licenseset/{licenseSetId}/default:
+  /contract/{contractId}/licenseset/{licenseSetId}/default:
     post:
       tags:
       - License Mgmt - internal
@@ -222,7 +222,7 @@ paths:
         Sets the default flag to true for this LicenseSet, and modifies all other
         licenseSets in this contract as default = false
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         description: Id of the enterprise contract.
         required: true
@@ -237,7 +237,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/LicenseSet'
-  /contract/{enterpriseId}/licenseset/{licenseSetId}/feature:
+  /contract/{contractId}/licenseset/{licenseSetId}/feature:
     post:
       tags:
       - License Mgmt - internal
@@ -246,7 +246,7 @@ paths:
         Allows contracting to add additional features/addons/etc to the license
         Set. Id property is ignored.
       parameters:
-      - name: enterpriseId
+      - name: contractId
         in: path
         description: Id of the enterprise contract.
         required: true
