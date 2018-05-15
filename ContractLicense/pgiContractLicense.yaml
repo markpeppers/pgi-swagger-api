@@ -19,14 +19,14 @@ tags:
 schemes:
 - https
 paths:
-  /contract/{enterpriseId}:
+  /contract/enterprise/{enterpriseId}:
     get:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
       summary: Get a contract by id
       description: Get a contract by its UUID
-      operationId: getContract
+      operationId: getContractByEnterprise
       parameters:
       - name: enterpriseId
         in: path
@@ -46,9 +46,56 @@ paths:
       - License Mgmt - internal
       summary: Update a contract by id
       description: Update a Contract
-      operationId: updateContract
+      operationId: updateContractByEnterprise
       parameters:
       - name: enterpriseId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      - in: body
+        name: updatedContract
+        required: true
+        schema:
+          $ref: '#/definitions/Contract'
+      responses:
+        200:
+          description: Contract successfully updated
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: Not found
+  /contract/provider/{providerId}:
+    get:
+      tags:
+      - License Mgmt - internal
+      - License Mgmt - external
+      summary: Get a contract by provider id
+      description: Get a contract by its UUID
+      operationId: getContractByProvider
+      parameters:
+      - name: providerId
+        in: path
+        description: UUID of contract to be fetched
+        required: true
+        type: string
+        format: uuid
+      responses:
+        200:
+          description: Contract found
+          schema:
+            $ref: '#/definitions/Contract'
+        404:
+          description: No contract with the given id was found for your provider
+    put:
+      tags:
+      - License Mgmt - internal
+      summary: Update a contract by provider id
+      description: Update a Contract
+      operationId: updateContractByProvider
+      parameters:
+      - name: providerId
         in: path
         description: UUID of contract to be fetched
         required: true
