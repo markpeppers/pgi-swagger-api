@@ -421,7 +421,7 @@ paths:
           description: max licenses already assigned for this licenseSet
           schema:
             $ref: '#/definitions/RestError'
-  /license/{licenseId}/client:
+  /license/{licenseId}/client/{clientId}:
     post:
       tags:
       - License Mgmt - internal
@@ -432,6 +432,12 @@ paths:
       - name: licenseId
         in: path
         description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - name: clientId
+        in: path
+        description: UUID of the client
         required: true
         type: string
         format: uuid
@@ -471,6 +477,12 @@ paths:
         required: true
         type: string
         format: uuid
+      - name: clientId
+        in: path
+        description: UUID of the client
+        required: true
+        type: string
+        format: uuid
       responses:
         200:
           description: Success - License reassigned.
@@ -502,6 +514,12 @@ paths:
       - name: licenseId
         in: path
         description: UUID of the license
+        required: true
+        type: string
+        format: uuid
+      - name: clientId
+        in: path
+        description: UUID of the client
         required: true
         type: string
         format: uuid
