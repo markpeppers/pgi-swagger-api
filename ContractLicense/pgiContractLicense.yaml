@@ -417,7 +417,7 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/License'
-  /license/{licenseSetId}/client:
+  /license/{licenseId}/client:
     post:
       tags:
       - License Mgmt - internal
@@ -425,7 +425,7 @@ paths:
       description: |
         This call will only work against a license that is unassigned.
       parameters:
-      - name: licenseSetId
+      - name: licenseId
         in: path
         description: UUID of the license
         required: true
@@ -454,22 +454,19 @@ paths:
       - License Mgmt - external
       summary: Change the client currently assigned to this license
       description: |
-        This call will change the assigned client information for the source
-        type listed in the request body. It will put an endDate on the
-        previously assigned client based on the startDate of the request body.
-        TODO - Deal with overlapping changes....
+        This call will change the assigned client information for the source type listed in the request body. It will put an endDate on the previously assigned client based on the startDate of the request body.
+        parameters:
+        - in: body
+          name: client
+          schema:
+            $ref: '#/definitions/Client'
       parameters:
-      - name: licenseSetId
+      - name: licenseId
         in: path
         description: UUID of the license
         required: true
         type: string
         format: uuid
-      - in: body
-        name: client
-        required: false
-        schema:
-          $ref: '#/definitions/Client'
       responses:
         200:
           description: Success - License reassigned.
@@ -498,7 +495,7 @@ paths:
 
         (All deletes are soft-deletes, btw)
       parameters:
-      - name: licenseSetId
+      - name: licenseId
         in: path
         description: UUID of the license
         required: true
