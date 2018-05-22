@@ -19,6 +19,103 @@ tags:
 schemes:
 - https
 paths:
+  /enterprise/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get an Enterprise by Id
+      description: return the requested Enterprise
+      operationId: getEnterprise
+      parameters:
+      - name: id
+        in: path
+        description: Enterprise Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Enterprise'
+        404:
+          description: enterprise not found
+    delete:
+      tags:
+      - internal
+      summary: deactivate a enterprise by Id
+      operationId: deleteEnterprise
+      parameters:
+      - name: id
+        in: path
+        description: Enterprise Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: enterprise already deactivated
+        404:
+          description: enterprise not found
+  /enterprise/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate an Enterprise by Id
+      operationId: reactivateEnterprise
+      parameters:
+      - name: id
+        in: path
+        description: Enterprise Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: enterprise already active
+        404:
+          description: enterprise not found
+  /enterprise:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds an Enterprise
+      operationId: addEnterprise
+      parameters:
+      - in: body
+        name: newEnterprise
+        description: enterprise to add
+        required: false
+        schema:
+          $ref: '#/definitions/Enterprise'
+      responses:
+        201:
+          description: enterprise created
+        400:
+          description: invalid input, object invalid
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies an Enterprise
+      operationId: updateEnterprise
+      parameters:
+      - in: body
+        name: updatedEnterprise
+        description: updated enterprise
+        required: false
+        schema:
+          $ref: '#/definitions/Enterprise'
+      responses:
+        200:
+          description: enterprise updated
+          schema:
+            $ref: '#/definitions/Enterprise'
+        404:
+          description: enterprise not found
   /client/{id}:
     get:
       tags:
@@ -117,6 +214,30 @@ paths:
         404:
           description: client not found
 definitions:
+  Enterprise:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      name:
+        type: string
+        description: Human readable name for use in identifying the enterprise.
+      startDate:
+        type: string
+        format: date
+        description: Date that this enterprise is created
+      endDate:
+        type: string
+        format: date
+        description: If the enterprise is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      endDate: 2000-01-23
+      name: name
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
   Client:
     type: object
     required:
@@ -143,6 +264,9 @@ definitions:
       name:
         type: string
         description: Hooman readable name for use in identifying client records. (Admin use only?? Synchronizing? etc)
+      companyId:
+        type: string
+        description: This client's company
       startDate:
         type: string
         format: date
@@ -155,6 +279,7 @@ definitions:
           is set.
         readOnly: true
     example:
+      companyId: companyId
       endDate: 2000-01-23
       name: name
       externalId: externalId
