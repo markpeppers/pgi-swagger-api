@@ -19,6 +19,103 @@ tags:
 schemes:
 - https
 paths:
+  /provider/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get a Provider by Id
+      description: return the requested Provider
+      operationId: getProvider
+      parameters:
+      - name: id
+        in: path
+        description: Provider Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Provider'
+        404:
+          description: provider not found
+    delete:
+      tags:
+      - internal
+      summary: deactivate a provider by Id
+      operationId: deleteProvider
+      parameters:
+      - name: id
+        in: path
+        description: Provider Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: provider already deactivated
+        404:
+          description: provider not found
+  /provider/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate a Provider by Id
+      operationId: reactivateProvider
+      parameters:
+      - name: id
+        in: path
+        description: Provider Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: provider already active
+        404:
+          description: provider not found
+  /provider:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds a Provider
+      operationId: addProvider
+      parameters:
+      - in: body
+        name: newProvider
+        description: provider to add
+        required: false
+        schema:
+          $ref: '#/definitions/Provider'
+      responses:
+        201:
+          description: provider created
+        400:
+          description: invalid input, object invalid
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Provider
+      operationId: updateProvider
+      parameters:
+      - in: body
+        name: updatedProvider
+        description: updated provider
+        required: false
+        schema:
+          $ref: '#/definitions/Provider'
+      responses:
+        200:
+          description: provider updated
+          schema:
+            $ref: '#/definitions/Provider'
+        404:
+          description: provider not found
   /enterprise/{id}:
     get:
       tags:
@@ -214,6 +311,34 @@ paths:
         404:
           description: client not found
 definitions:
+  Provider:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      externalId:
+        type: string
+        description: Unique identifier of provider in source system.
+      name:
+        type: string
+        description: Human readable name for use in identifying the provider.
+      startDate:
+        type: string
+        format: date
+        description: Date that this provider is created
+      endDate:
+        type: string
+        format: date
+        description: If the provider is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      endDate: 2000-01-23
+      name: name
+      externalId: externalId
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
   Enterprise:
     type: object
     properties:
