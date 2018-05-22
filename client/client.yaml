@@ -101,7 +101,7 @@ paths:
       - internal
       - external
       summary: modifies a Provider
-      operationId: updateProvider
+      operationId: modifyProvider
       parameters:
       - in: body
         name: updatedProvider
@@ -198,7 +198,7 @@ paths:
       - internal
       - external
       summary: modifies an Enterprise
-      operationId: updateEnterprise
+      operationId: modifyEnterprise
       parameters:
       - in: body
         name: updatedEnterprise
@@ -295,7 +295,7 @@ paths:
       - internal
       - external
       summary: modifies a Corporate Customer
-      operationId: updateCorpCust
+      operationId: modifyCorpCust
       parameters:
       - in: body
         name: updatedCorpCust
@@ -392,7 +392,7 @@ paths:
       - internal
       - external
       summary: modifies a Company
-      operationId: updateCompany
+      operationId: modifyCompany
       parameters:
       - in: body
         name: updatedCompany
@@ -489,7 +489,7 @@ paths:
       - internal
       - external
       summary: modifies a Client
-      operationId: updateClient
+      operationId: modifyClient
       parameters:
       - in: body
         name: updatedClient
