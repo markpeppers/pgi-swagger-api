@@ -573,6 +573,9 @@ definitions:
       name:
         type: string
         description: Human readable name for use in identifying the corporate customrer.
+      address:
+        type: object
+        properties: {}
       startDate:
         type: string
         format: date
@@ -583,6 +586,7 @@ definitions:
         description: If the corporate customer is 'deleted', then the end date is set.
         readOnly: true
     example:
+      address: '{}'
       endDate: 2000-01-23
       name: name
       externalId: externalId
@@ -605,6 +609,9 @@ definitions:
       name:
         type: string
         description: Human readable name for use in identifying the company.
+      address:
+        type: object
+        properties: {}
       startDate:
         type: string
         format: date
@@ -616,6 +623,7 @@ definitions:
         readOnly: true
     example:
       corpcustId: corpcustId
+      address: '{}'
       endDate: 2000-01-23
       name: name
       externalId: externalId
@@ -650,6 +658,9 @@ definitions:
       companyId:
         type: string
         description: This client's company
+      address:
+        type: object
+        properties: {}
       startDate:
         type: string
         format: date
@@ -663,6 +674,7 @@ definitions:
         readOnly: true
     example:
       companyId: companyId
+      address: '{}'
       endDate: 2000-01-23
       name: name
       externalId: externalId
