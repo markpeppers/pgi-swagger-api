@@ -543,6 +543,96 @@ paths:
           description: bad request - only one entity allowed in query
         404:
           description: no matching clients found
+  /providers:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all providers
+      operationId: getProviders
+      parameters: []
+      responses:
+        200:
+          description: provider list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Provider'
+        400:
+          description: bad request
+        404:
+          description: no providers found
+  /enterprises:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all enterprises for a provider
+      operationId: getEnterprises
+      parameters:
+      - name: provider
+        in: query
+        description: provider id
+        required: false
+        type: string
+      responses:
+        200:
+          description: enterprise list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Enterprise'
+        400:
+          description: bad request
+        404:
+          description: no enterprises found for given provider
+  /corpcusts:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all corporate customers for an enterprise
+      operationId: getCorpCusts
+      parameters:
+      - name: enterprise
+        in: query
+        description: enterprise id
+        required: false
+        type: string
+      responses:
+        200:
+          description: corporate customer list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CorpCust'
+        400:
+          description: bad request
+        404:
+          description: no corporate customers found for given enterprise
+  /companies:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all companies for a corporate customer
+      operationId: getCompanies
+      parameters:
+      - name: corpcust
+        in: query
+        description: corporate customer id
+        required: false
+      responses:
+        200:
+          description: company list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Company'
+        400:
+          description: bad request
+        404:
+          description: no companies found for given corporate customer
 definitions:
   Provider:
     type: object
