@@ -622,6 +622,7 @@ paths:
         in: query
         description: corporate customer id
         required: false
+        type: string
       responses:
         200:
           description: company list
