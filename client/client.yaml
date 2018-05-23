@@ -504,6 +504,35 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
+  /clients:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of Clients by entity
+      operationId: getClients
+      parameters:
+      - name: provider
+        in: query
+        description: provider id
+        required: false
+        type: string
+      - name: enterprise
+        in: query
+        description: enterprise id
+        required: false
+        type: string
+      responses:
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+        400:
+          description: bad request
+        404:
+          description: no matching clients found
 definitions:
   Provider:
     type: object
@@ -572,7 +601,7 @@ definitions:
         description: The enterprise this corporate customer is under.
       name:
         type: string
-        description: Human readable name for use in identifying the corporate customrer.
+        description: Human readable name for use in identifying the corporate customer.
       address:
         type: object
         properties: {}
@@ -660,6 +689,12 @@ definitions:
         description: This client's company
       address:
         type: object
+        example:
+          address1: 2300 Lakeview Parkway
+          city: Alpharetta
+          stateOrProvince: GA
+          postalCode: 30009
+          country: USA
         properties: {}
       startDate:
         type: string
@@ -674,7 +709,12 @@ definitions:
         readOnly: true
     example:
       companyId: companyId
-      address: '{}'
+      address:
+        address1: 2300 Lakeview Parkway
+        city: Alpharetta
+        stateOrProvince: GA
+        postalCode: 30009
+        country: USA
       endDate: 2000-01-23
       name: name
       externalId: externalId
