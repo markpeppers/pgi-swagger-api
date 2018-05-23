@@ -504,37 +504,17 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
-  /providers:
-    get:
-      tags:
-      - internal
-      - external
-      summary: get list of all providers
-      operationId: getProviders
-      parameters: []
-      responses:
-        200:
-          description: provider list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Provider'
-        400:
-          description: bad request
-        404:
-          description: no providers found
   /enterprises:
     get:
       tags:
       - internal
-      - external
       summary: get list of all enterprises for a provider
       operationId: getEnterprises
       parameters:
       - name: provider
         in: query
         description: provider id
-        required: false
+        required: true
         type: string
       responses:
         200:
@@ -558,7 +538,7 @@ paths:
       - name: enterprise
         in: query
         description: enterprise id
-        required: false
+        required: true
         type: string
       responses:
         200:
@@ -582,7 +562,7 @@ paths:
       - name: corpcust
         in: query
         description: corporate customer id
-        required: false
+        required: true
         type: string
       responses:
         200:
