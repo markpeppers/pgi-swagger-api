@@ -587,7 +587,12 @@ paths:
         required: true
         type: string
       responses:
-        200: {}
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
         400:
           description: bad request
         404:
@@ -605,12 +610,18 @@ paths:
         required: true
         type: string
       responses:
-        200: {}
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
         400:
           description: bad request
         404:
           description: no matching clients found
   /clients/corpcust/{corpcustId}: {}
+  /clients/company/{companyId}: {}
   /clients:
     get:
       tags:
