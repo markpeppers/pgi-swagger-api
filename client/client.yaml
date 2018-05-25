@@ -40,82 +40,6 @@ paths:
             $ref: '#/definitions/Provider'
         404:
           description: provider not found
-    delete:
-      tags:
-      - internal
-      summary: deactivate a provider by Id
-      operationId: deleteProvider
-      parameters:
-      - name: id
-        in: path
-        description: Provider Id
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-        202:
-          description: provider already deactivated
-        404:
-          description: provider not found
-  /provider/reactivate/{id}:
-    put:
-      tags:
-      - internal
-      summary: reactivate a Provider by Id
-      operationId: reactivateProvider
-      parameters:
-      - name: id
-        in: path
-        description: Provider Id
-        required: true
-        type: string
-      responses:
-        200:
-          description: success
-        202:
-          description: provider already active
-        404:
-          description: provider not found
-  /provider:
-    post:
-      tags:
-      - internal
-      - external
-      summary: adds a Provider
-      operationId: addProvider
-      parameters:
-      - in: body
-        name: newProvider
-        description: provider to add
-        required: false
-        schema:
-          $ref: '#/definitions/Provider'
-      responses:
-        201:
-          description: provider created
-        400:
-          description: invalid input, object invalid
-    put:
-      tags:
-      - internal
-      - external
-      summary: modifies a Provider
-      operationId: modifyProvider
-      parameters:
-      - in: body
-        name: updatedProvider
-        description: updated provider
-        required: false
-        schema:
-          $ref: '#/definitions/Provider'
-      responses:
-        200:
-          description: provider updated
-          schema:
-            $ref: '#/definitions/Provider'
-        404:
-          description: provider not found
   /enterprise/{id}:
     get:
       tags:
@@ -620,8 +544,52 @@ paths:
           description: bad request
         404:
           description: no matching clients found
-  /clients/corpcust/{corpcustId}: {}
-  /clients/company/{companyId}: {}
+  /clients/corpcust/{corpcustId}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of clients by corporate customer
+      parameters:
+      - name: corpcustId
+        in: path
+        description: corporate customer id
+        required: true
+        type: string
+      responses:
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+        400:
+          description: bad request
+        404:
+          description: no matching clients found
+  /clients/company/{companyId}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of clients by company
+      parameters:
+      - name: companyId
+        in: path
+        description: company id
+        required: true
+        type: string
+      responses:
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+        400:
+          description: bad request
+        404:
+          description: no matching clients found
 definitions:
   Provider:
     type: object
