@@ -575,6 +575,42 @@ paths:
           description: bad request
         404:
           description: no companies found for given corporate customer
+  /clients/provider/{providerId}:
+    get:
+      tags:
+      - internal
+      summary: get list of clients by provider
+      parameters:
+      - name: providerId
+        in: path
+        description: provider id
+        required: true
+        type: string
+      responses:
+        200: {}
+        400:
+          description: bad request
+        404:
+          description: no matching clients found
+  /clients/enterprise/{enterpriseId}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of clients by enterprise
+      parameters:
+      - name: enterpriseId
+        in: path
+        description: enterprise id
+        required: true
+        type: string
+      responses:
+        200: {}
+        400:
+          description: bad request
+        404:
+          description: no matching clients found
+  /clients/corpcust/{corpcustId}: {}
   /clients:
     get:
       tags:
@@ -622,6 +658,13 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
+      source:
+        type: string
+        description: Source system
+        enum:
+        - gm5
+        - mavinir
+        - hub
       externalId:
         type: string
         description: Unique identifier of provider in source system.
@@ -642,6 +685,7 @@ definitions:
       name: name
       externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
       startDate: 2000-01-23
   Enterprise:
     type: object
@@ -650,6 +694,16 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
+      source:
+        type: string
+        description: Source system
+        enum:
+        - gm5
+        - mavinir
+        - hub
+      externalId:
+        type: string
+        description: Unique identifier of enterprise in source system.
       name:
         type: string
         description: Human readable name for use in identifying the enterprise.
@@ -665,7 +719,9 @@ definitions:
     example:
       endDate: 2000-01-23
       name: name
+      externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
       startDate: 2000-01-23
   CorpCust:
     type: object
@@ -674,6 +730,13 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
+      source:
+        type: string
+        description: Source system
+        enum:
+        - gm5
+        - mavinir
+        - hub
       externalId:
         type: string
         description: Unique identifier of the corporate customer in source system.
@@ -701,6 +764,7 @@ definitions:
       name: name
       externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
       enterpriseId: enterpriseId
       startDate: 2000-01-23
   Company:
@@ -710,6 +774,13 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
+      source:
+        type: string
+        description: Source system
+        enum:
+        - gm5
+        - mavinir
+        - hub
       externalId:
         type: string
         description: Unique identifier of the company in source system.
@@ -738,6 +809,7 @@ definitions:
       name: name
       externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      source: gm5
       startDate: 2000-01-23
   Client:
     type: object
@@ -757,8 +829,7 @@ definitions:
         enum:
         - gm5
         - mavenir
-        - somethingElse
-        - talkpoint
+        - hub
       externalId:
         type: string
         description: Unique identifier of client in source system. May not apply for unlinked/unprovisioned client sources..
