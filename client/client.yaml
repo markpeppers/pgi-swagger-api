@@ -622,45 +622,6 @@ paths:
           description: no matching clients found
   /clients/corpcust/{corpcustId}: {}
   /clients/company/{companyId}: {}
-  /clients:
-    get:
-      tags:
-      - internal
-      - external
-      summary: get list of Clients by entity
-      operationId: getClients
-      parameters:
-      - name: provider
-        in: query
-        description: provider id
-        required: false
-        type: string
-      - name: enterprise
-        in: query
-        description: enterprise id
-        required: false
-        type: string
-      - name: corpcust
-        in: query
-        description: corporate customer id
-        required: false
-        type: string
-      - name: company
-        in: query
-        description: company id
-        required: false
-        type: string
-      responses:
-        200:
-          description: client list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Client'
-        400:
-          description: bad request - only one entity allowed in query
-        404:
-          description: no matching clients found
 definitions:
   Provider:
     type: object
