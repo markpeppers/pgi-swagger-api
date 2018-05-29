@@ -40,103 +40,103 @@ paths:
             $ref: '#/definitions/Provider'
         404:
           description: provider not found
-  /enterprise/{id}:
+  /legalEntity/{id}:
     get:
       tags:
       - internal
       - external
-      summary: Get an Enterprise by Id
-      description: return the requested Enterprise
-      operationId: getEnterprise
+      summary: Get a Legal Entity by Id
+      description: return the requested Legal Entity
+      operationId: getLegalEntity
       parameters:
       - name: id
         in: path
-        description: Enterprise Id
+        description: Legal Entity Id
         required: true
         type: string
       responses:
         200:
           description: success
           schema:
-            $ref: '#/definitions/Enterprise'
+            $ref: '#/definitions/LegalEntity'
         404:
-          description: enterprise not found
+          description: legal entity not found
     delete:
       tags:
       - internal
-      summary: deactivate a enterprise by Id
-      operationId: deleteEnterprise
+      summary: deactivate a legal entity by Id
+      operationId: deleteLegalEntity
       parameters:
       - name: id
         in: path
-        description: Enterprise Id
+        description: Legal Entity Id
         required: true
         type: string
       responses:
         200:
           description: success
         202:
-          description: enterprise already deactivated
+          description: legal entity already deactivated
         404:
-          description: enterprise not found
-  /enterprise/reactivate/{id}:
+          description: legal entity not found
+  /legalEntity/reactivate/{id}:
     put:
       tags:
       - internal
-      summary: reactivate an Enterprise by Id
-      operationId: reactivateEnterprise
+      summary: reactivate an Legal Entity by Id
+      operationId: reactivateLegalEntity
       parameters:
       - name: id
         in: path
-        description: Enterprise Id
+        description: Legal Entity Id
         required: true
         type: string
       responses:
         200:
           description: success
         202:
-          description: enterprise already active
+          description: legal entity already active
         404:
-          description: enterprise not found
-  /enterprise:
+          description: legal entity not found
+  /legalEntity:
     post:
       tags:
       - internal
       - external
-      summary: adds an Enterprise
-      operationId: addEnterprise
+      summary: adds an Legal Entity
+      operationId: addLegalEntity
       parameters:
       - in: body
-        name: newEnterprise
-        description: enterprise to add
+        name: newLegalEntity
+        description: legal entity to add
         required: false
         schema:
-          $ref: '#/definitions/Enterprise'
+          $ref: '#/definitions/LegalEntity'
       responses:
         201:
-          description: enterprise created
+          description: legal entity created
         400:
           description: invalid input, object invalid
     put:
       tags:
       - internal
       - external
-      summary: modifies an Enterprise
-      operationId: modifyEnterprise
+      summary: modifies an Legal Entity
+      operationId: modifyLegalEntity
       parameters:
       - in: body
-        name: updatedEnterprise
-        description: updated enterprise
+        name: updatedLegalEntity
+        description: updated legal entity
         required: false
         schema:
-          $ref: '#/definitions/Enterprise'
+          $ref: '#/definitions/LegalEntity'
       responses:
         200:
-          description: enterprise updated
+          description: legal entity updated
           schema:
-            $ref: '#/definitions/Enterprise'
+            $ref: '#/definitions/LegalEntity'
         404:
-          description: enterprise not found
+          description: legal entity not found
   /corpcust/{id}:
     get:
       tags:
@@ -428,12 +428,12 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
-  /enterprises:
+  /legalEntities:
     get:
       tags:
       - internal
-      summary: get list of all enterprises for a provider
-      operationId: getEnterprises
+      summary: get list of all legal entities for a provider
+      operationId: getLegalEntities
       parameters:
       - name: provider
         in: query
@@ -442,26 +442,26 @@ paths:
         type: string
       responses:
         200:
-          description: enterprise list
+          description: legal entities list
           schema:
             type: array
             items:
-              $ref: '#/definitions/Enterprise'
+              $ref: '#/definitions/LegalEntity'
         400:
           description: bad request
         404:
-          description: no enterprises found for given provider
+          description: no legal entities found for given provider
   /corpcusts:
     get:
       tags:
       - internal
       - external
-      summary: get list of all corporate customers for an enterprise
+      summary: get list of all corporate customers for a legal entity
       operationId: getCorpCusts
       parameters:
-      - name: enterprise
+      - name: legalEntity
         in: query
-        description: enterprise id
+        description: legal entity id
         required: true
         type: string
       responses:
@@ -474,7 +474,7 @@ paths:
         400:
           description: bad request
         404:
-          description: no corporate customers found for given enterprise
+          description: no corporate customers found for given legal entity
   /companies:
     get:
       tags:
@@ -521,16 +521,16 @@ paths:
           description: bad request
         404:
           description: no matching clients found
-  /clients/enterprise/{enterpriseId}:
+  /clients/legalEntity/{legalEntityId}:
     get:
       tags:
       - internal
       - external
-      summary: get list of clients by enterprise
+      summary: get list of clients by legal entity
       parameters:
-      - name: enterpriseId
+      - name: legalEntityId
         in: path
-        description: enterprise id
+        description: legal entity id
         required: true
         type: string
       responses:
@@ -627,7 +627,7 @@ definitions:
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
       startDate: 2000-01-23
-  Enterprise:
+  LegalEntity:
     type: object
     properties:
       id:
@@ -643,18 +643,18 @@ definitions:
         - hub
       externalId:
         type: string
-        description: Unique identifier of enterprise in source system.
+        description: Unique identifier of legal entity in source system.
       name:
         type: string
-        description: Human readable name for use in identifying the enterprise.
+        description: Human readable name for use in identifying the legal entity.
       startDate:
         type: string
         format: date
-        description: Date that this enterprise is created
+        description: Date that this legal entity is created
       endDate:
         type: string
         format: date
-        description: If the enterprise is 'deleted', then the end date is set.
+        description: If the legal entity is 'deleted', then the end date is set.
         readOnly: true
     example:
       endDate: 2000-01-23
@@ -680,14 +680,20 @@ definitions:
       externalId:
         type: string
         description: Unique identifier of the corporate customer in source system.
-      enterpriseId:
+      legalEntityId:
         type: string
-        description: The enterprise this corporate customer is under.
+        description: The legal entity this corporate customer is under.
       name:
         type: string
         description: Human readable name for use in identifying the corporate customer.
       address:
         type: object
+        example:
+          address1: 2300 Lakeview Parkway
+          city: Alpharetta
+          stateOrProvince: GA
+          postalCode: 30009
+          country: USA
         properties: {}
       startDate:
         type: string
@@ -699,13 +705,18 @@ definitions:
         description: If the corporate customer is 'deleted', then the end date is set.
         readOnly: true
     example:
-      address: '{}'
+      address:
+        address1: 2300 Lakeview Parkway
+        city: Alpharetta
+        stateOrProvince: GA
+        postalCode: 30009
+        country: USA
+      legalEntityId: legalEntityId
       endDate: 2000-01-23
       name: name
       externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
-      enterpriseId: enterpriseId
       startDate: 2000-01-23
   Company:
     type: object
@@ -732,6 +743,12 @@ definitions:
         description: Human readable name for use in identifying the company.
       address:
         type: object
+        example:
+          address1: 2300 Lakeview Parkway
+          city: Alpharetta
+          stateOrProvince: GA
+          postalCode: 30009
+          country: USA
         properties: {}
       startDate:
         type: string
@@ -744,7 +761,12 @@ definitions:
         readOnly: true
     example:
       corpcustId: corpcustId
-      address: '{}'
+      address:
+        address1: 2300 Lakeview Parkway
+        city: Alpharetta
+        stateOrProvince: GA
+        postalCode: 30009
+        country: USA
       endDate: 2000-01-23
       name: name
       externalId: externalId
@@ -775,7 +797,8 @@ definitions:
         description: Unique identifier of client in source system. May not apply for unlinked/unprovisioned client sources..
       name:
         type: string
-        description: Hooman readable name for use in identifying client records. (Admin use only?? Synchronizing? etc)
+        example: Knight Industries
+        description: Hooman readable name for use in identifying client records.
       companyId:
         type: string
         description: This client's company
@@ -808,7 +831,7 @@ definitions:
         postalCode: 30009
         country: USA
       endDate: 2000-01-23
-      name: name
+      name: Knight Industries
       externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
