@@ -41,6 +41,8 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: No contract with the given id was found for your enterprise
+          schema:
+            $ref: '#/definitions/ContractNotFound'
     put:
       tags:
       - License Mgmt - internal
@@ -584,6 +586,16 @@ definitions:
       entityId: entityId
       id: d290f1ee-6c54-4b01-90e6-d701748f0851
       source: iContract
+  ContractNotFound:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 110
+      message:
+        type: string
+        example: Contract not found
+    description: Contract not found
   LicenseSet:
     type: object
     required:
