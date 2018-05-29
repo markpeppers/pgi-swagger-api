@@ -40,7 +40,7 @@ paths:
           schema:
             $ref: '#/definitions/Contract'
         404:
-          description: No contract with the given id was found for your enterprise
+          description: Not found
           schema:
             $ref: '#/definitions/ContractNotFound'
     put:
@@ -68,6 +68,8 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
+          schema:
+            $ref: '#/definitions/ContractNotFound'
   /contract/provider/{providerId}:
     get:
       tags:
