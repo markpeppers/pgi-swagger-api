@@ -592,9 +592,11 @@ definitions:
       code:
         type: integer
         example: 110
+        description: System error code
       message:
         type: string
         example: Contract not found
+        description: Error message
     description: Contract not found
   LicenseSet:
     type: object
