@@ -119,6 +119,8 @@ paths:
             $ref: '#/definitions/Contract'
         404:
           description: Not found
+          schema:
+            $ref: '#/definitions/ContractNotFound'
   /contract/{contractId}/licenseset:
     get:
       tags:
