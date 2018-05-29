@@ -19,16 +19,16 @@ tags:
 schemes:
 - https
 paths:
-  /contract/enterprise/{enterpriseId}:
+  /contract/legalEntity/{legalEntityId}:
     get:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
-      summary: Get a contract by enterprise id
+      summary: Get a contract by legal entity id
       description: Get a contract by its UUID
-      operationId: getContractByEnterprise
+      operationId: getContractByLegalEntity
       parameters:
-      - name: enterpriseId
+      - name: legalEntityId
         in: path
         description: UUID of contract to be fetched
         required: true
@@ -46,11 +46,11 @@ paths:
     put:
       tags:
       - License Mgmt - internal
-      summary: Update a contract by enterprise id
+      summary: Update a contract by legal entity id
       description: Update a Contract
-      operationId: updateContractByEnterprise
+      operationId: updateContractByLegalEntity
       parameters:
-      - name: enterpriseId
+      - name: legalEntityId
         in: path
         description: UUID of contract to be fetched
         required: true
@@ -175,7 +175,7 @@ paths:
       parameters:
       - name: contractId
         in: path
-        description: Id of the enterprise contract.
+        description: Id of the legal entity contract.
         required: true
         type: string
       - name: licenseSetId
@@ -200,7 +200,7 @@ paths:
       parameters:
       - name: contractId
         in: path
-        description: Id of the enterprise contract.
+        description: Id of the legal entity contract.
         required: true
         type: string
       - name: licenseSetId
@@ -232,7 +232,7 @@ paths:
       parameters:
       - name: contractId
         in: path
-        description: Id of the enterprise contract.
+        description: Id of the legal entity contract.
         required: true
         type: string
       - name: licenseSetId
@@ -256,7 +256,7 @@ paths:
       parameters:
       - name: contractId
         in: path
-        description: Id of the enterprise contract.
+        description: Id of the legal entity contract.
         required: true
         type: string
       - name: licenseSetId
@@ -276,15 +276,15 @@ paths:
             $ref: '#/definitions/Feature'
         404:
           description: Not found
-  /licenses/search/enterprise/{enterpriseId}:
+  /licenses/search/legalEntity/{legalEntityId}:
     get:
       tags:
       - License Mgmt - internal
       - License Mgmt - external
       parameters:
-      - name: enterpriseId
+      - name: legalEntityId
         in: path
-        description: Returns all licenses associated with an enterprise
+        description: Returns all licenses associated with an legal entity
         required: true
         type: string
       responses:
@@ -569,24 +569,24 @@ definitions:
         description: Unique identifier from source system, like the salesforce iContract id.
       contractType:
         type: string
-        description: Denotes whether this contract is associated with an enterprise or with a provider
+        description: Denotes whether this contract is associated with an legal entity or with a provider
         enum:
-        - enterprise
+        - legalEntity
         - provider
       entityId:
         type: string
-        description: Id of this contract's associated top-level enterprise or provider, depending on its contractType.
+        description: Id of this contract's associated top-level legal entity or provider, depending on its contractType.
       default:
         type: boolean
         description: |
           Flag to determine if this is the default contract to be used for operations. If you update this flag to
-          be true, then all other contracts belonging to the enterprise will be set to default=false
+          be true, then all other contracts belonging to the legal entity will be set to default=false
     description: |
-      Represents the base Contract (Agreement), which is assigned to an Enterprise (top level of company
+      Represents the base Contract (Agreement), which is assigned to an LegalEntity (top level of company
       heirarchy)
     example:
       default: true
-      contractType: enterprise
+      contractType: legalEntity
       name: Hosted Voice with Global Meet
       externalId: a023800000ZUQCW
       entityId: entityId
@@ -626,9 +626,9 @@ definitions:
         type: string
         description: Contract to which this sub component (license set) belongs. A single contract may contain multiple, independently licensable products.
         readOnly: true
-      enterpriseId:
+      legalEntityId:
         type: string
-        description: In the case of a LicenseSet belonging to a Provider Contract, the provider may assign license sets to multpile enterprises.
+        description: In the case of a LicenseSet belonging to a Provider Contract, the provider may assign license sets to multpile legal entity.
         readOnly: true
       model:
         type: string
@@ -911,6 +911,7 @@ definitions:
         * 110 - Contract not found
       * 2xx - LicenseSet error messages
         * 210 - Max number of licenses reached for this licenseSet
+        * 220 - LicenseSet not found
       * 3xx - License and client assignment errors
         * 310 - License is not active
         * 320 - A client with the given source type already assigned to this license
