@@ -93,7 +93,7 @@ paths:
         404:
           description: Not found
           schema:
-            $ref: '#/definitions/RestError'
+            $ref: '#/definitions/ContractNotFound'
     put:
       tags:
       - License Mgmt - internal
@@ -602,37 +602,6 @@ definitions:
         example: Contract not found
         description: Error message
     description: Contract not found
-  RestError:
-    type: object
-    properties:
-      code:
-        type: integer
-        description: System error code (not HTTP status)
-      message:
-        type: string
-        description: Error message
-      extended:
-        type: string
-        description: extended error information (system related)
-    description: |
-      Error response details
-
-      * 1xx - Contract error message
-        * 110 - Contract not found
-      * 2xx - LicenseSet error messages
-        * 210 - Max number of licenses reached for this licenseSet
-      * 3xx - License and client assignment errors
-        * 310 - License is not active
-        * 320 - A client with the given source type already assigned to this license
-        * 35x - Option errors...
-          * 350 - Invalid option group (does not exist in parent)
-          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
-          * 352 - No option specified for group, and default does not exist
-          * 353 - Multiple default options specified in OptionGroup.
-          * 354 - No default option specified in OptionGroup
-      * 5xx - general errors
-        * 500 - Unexpected server error
-        * 501 - Missing required values, see extended information
   LicenseSet:
     type: object
     required:
@@ -921,3 +890,34 @@ definitions:
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         source: gm5
         startDate: 2000-01-23
+  RestError:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: System error code (not HTTP status)
+      message:
+        type: string
+        description: Error message
+      extended:
+        type: string
+        description: extended error information (system related)
+    description: |
+      Error response details
+
+      * 1xx - Contract error message
+        * 110 - Contract not found
+      * 2xx - LicenseSet error messages
+        * 210 - Max number of licenses reached for this licenseSet
+      * 3xx - License and client assignment errors
+        * 310 - License is not active
+        * 320 - A client with the given source type already assigned to this license
+        * 35x - Option errors...
+          * 350 - Invalid option group (does not exist in parent)
+          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
+          * 352 - No option specified for group, and default does not exist
+          * 353 - Multiple default options specified in OptionGroup.
+          * 354 - No default option specified in OptionGroup
+      * 5xx - general errors
+        * 500 - Unexpected server error
+        * 501 - Missing required values, see extended information
