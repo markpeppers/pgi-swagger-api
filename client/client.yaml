@@ -117,7 +117,7 @@ paths:
         description: legal entity to add
         required: false
         schema:
-          $ref: '#/definitions/LegalEntity'
+          $ref: '#/definitions/LegalEntityRequest'
       responses:
         201:
           description: legal entity created
@@ -137,12 +137,10 @@ paths:
         description: updated legal entity
         required: false
         schema:
-          $ref: '#/definitions/LegalEntity'
+          $ref: '#/definitions/LegalEntityRequest'
       responses:
-        200:
-          description: legal entity updated
-          schema:
-            $ref: '#/definitions/LegalEntity'
+        202:
+          description: accepted
         404:
           description: legal entity not found
           schema:
@@ -180,10 +178,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: corporate customer already deactivated
+          description: accepted
         404:
           description: corporate customer not found
           schema:
@@ -201,10 +197,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: corporate customer already active
+          description: accepted
         404:
           description: corporate customer not found
           schema:
@@ -222,7 +216,7 @@ paths:
         description: corporate customer to add
         required: false
         schema:
-          $ref: '#/definitions/CorpCust'
+          $ref: '#/definitions/CorpCustRequest'
       responses:
         201:
           description: corporate customer created
@@ -242,12 +236,10 @@ paths:
         description: updated corporate customer
         required: false
         schema:
-          $ref: '#/definitions/CorpCust'
+          $ref: '#/definitions/CorpCustRequest'
       responses:
-        200:
-          description: corporate customer updated
-          schema:
-            $ref: '#/definitions/CorpCust'
+        202:
+          description: accepted
         404:
           description: corporate customer not found
           schema:
@@ -287,10 +279,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: company already deactivated
+          description: accepted
         404:
           description: company not found
           schema:
@@ -308,10 +298,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: company already active
+          description: accepted
         404:
           description: company not found
           schema:
@@ -329,7 +317,7 @@ paths:
         description: company to add
         required: false
         schema:
-          $ref: '#/definitions/Company'
+          $ref: '#/definitions/CompanyRequest'
       responses:
         201:
           description: company created
@@ -349,12 +337,10 @@ paths:
         description: updated company
         required: false
         schema:
-          $ref: '#/definitions/Company'
+          $ref: '#/definitions/CompanyRequest'
       responses:
-        200:
-          description: company updated
-          schema:
-            $ref: '#/definitions/Company'
+        202:
+          description: accepted
         404:
           description: company not found
           schema:
@@ -394,10 +380,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: client already deactivated
+          description: accepted
         404:
           description: client not found
           schema:
@@ -415,10 +399,8 @@ paths:
         required: true
         type: string
       responses:
-        200:
-          description: success
         202:
-          description: client already active
+          description: accepted
         404:
           description: client not found
           schema:
@@ -436,7 +418,7 @@ paths:
         description: client to add
         required: false
         schema:
-          $ref: '#/definitions/Client'
+          $ref: '#/definitions/ClientRequest'
       responses:
         201:
           description: client created
@@ -456,12 +438,10 @@ paths:
         description: updated client
         required: false
         schema:
-          $ref: '#/definitions/Client'
+          $ref: '#/definitions/ClientRequest'
       responses:
         200:
-          description: client updated
-          schema:
-            $ref: '#/definitions/Client'
+          description: accepted
         404:
           description: client not found
           schema:
@@ -665,16 +645,6 @@ definitions:
         format: integer
         example: "1"
         description: The Provider Id
-      source:
-        type: string
-        description: Source system
-        enum:
-        - gm5
-        - mavinir
-        - hub
-      externalId:
-        type: string
-        description: Unique identifier of provider in source system.
       name:
         type: string
         description: Human readable name for use in identifying the provider.
@@ -690,9 +660,7 @@ definitions:
     example:
       endDate: 2000-01-23
       name: name
-      externalId: externalId
       id: "1"
-      source: gm5
       startDate: 2000-01-23
   RestError:
     type: object
@@ -734,19 +702,11 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
-      source:
-        type: string
-        description: Source system
-        enum:
-        - gm5
-        - mavinir
-        - hub
-      externalId:
-        type: string
-        description: Unique identifier of legal entity in source system.
       name:
         type: string
         description: Human readable name for use in identifying the legal entity.
+      address:
+        $ref: '#/definitions/Address'
       startDate:
         type: string
         format: date
@@ -755,47 +715,6 @@ definitions:
         type: string
         format: date
         description: If the legal entity is 'deleted', then the end date is set.
-        readOnly: true
-    example:
-      endDate: 2000-01-23
-      name: name
-      externalId: externalId
-      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      source: gm5
-      startDate: 2000-01-23
-  CorpCust:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: System generated UUID
-      source:
-        type: string
-        description: Source system
-        enum:
-        - gm5
-        - mavinir
-        - hub
-      externalId:
-        type: string
-        description: Unique identifier of the corporate customer in source system.
-      legalEntityId:
-        type: string
-        description: The legal entity this corporate customer is under.
-      name:
-        type: string
-        description: Human readable name for use in identifying the corporate customer.
-      address:
-        $ref: '#/definitions/Address'
-      startDate:
-        type: string
-        format: date
-        description: Date that this corporate customer is created
-      endDate:
-        type: string
-        format: date
-        description: If the corporate customer is 'deleted', then the end date is set.
         readOnly: true
     example:
       address:
@@ -807,13 +726,9 @@ definitions:
         address1: 2300 Lakeview Parkway
         postalCode: "30009"
         timeZone: US Eastern
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      legalEntityId: legalEntityId
       endDate: 2000-01-23
       name: name
-      externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      source: gm5
       startDate: 2000-01-23
   Address:
     type: object
@@ -823,10 +738,6 @@ definitions:
     - country
     - timeZone
     properties:
-      id:
-        type: string
-        format: uuid
-        description: System assigned id for this address
       address1:
         type: string
         example: 2300 Lakeview Parkway
@@ -864,7 +775,78 @@ definitions:
       address1: 2300 Lakeview Parkway
       postalCode: "30009"
       timeZone: US Eastern
+  LegalEntityRequest:
+    properties:
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+  CorpCust:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      legalEntityId:
+        type: string
+        description: The legal entity this corporate customer is under.
+      name:
+        type: string
+        description: Human readable name for use in identifying the corporate customer.
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this corporate customer is created
+      endDate:
+        type: string
+        format: date
+        description: If the corporate customer is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      legalEntityId: legalEntityId
+      endDate: 2000-01-23
+      name: name
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
+  CorpCustRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Human Readable namd for use in identifying the corporate customer.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: name
   Company:
     type: object
     properties:
@@ -872,16 +854,6 @@ definitions:
         type: string
         format: uuid
         description: System generated UUID
-      source:
-        type: string
-        description: Source system
-        enum:
-        - gm5
-        - mavinir
-        - hub
-      externalId:
-        type: string
-        description: Unique identifier of the company in source system.
       corpcustId:
         type: string
         description: The corporate customer this company belongs to.
@@ -910,35 +882,36 @@ definitions:
         address1: 2300 Lakeview Parkway
         postalCode: "30009"
         timeZone: US Eastern
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       endDate: 2000-01-23
       name: name
-      externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      source: gm5
       startDate: 2000-01-23
+  CompanyRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Human readable name for use in identifying the company.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: name
   Client:
     type: object
-    required:
-    - source
     properties:
       id:
         type: string
         format: uuid
         description: System generated UUID
-      source:
-        type: string
-        description: |
-          Source system for identifying actual provisioned client. This value must be one of the supported
-          systems in order to tie license information to specific, supported provisioning systems for purposes
-          of license creation.
-        enum:
-        - gm5
-        - mavenir
-        - hub
-      externalId:
-        type: string
-        description: Unique identifier of client in source system. May not apply for unlinked/unprovisioned client sources..
       name:
         type: string
         example: Knight Industries
@@ -970,10 +943,27 @@ definitions:
         address1: 2300 Lakeview Parkway
         postalCode: "30009"
         timeZone: US Eastern
-        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       endDate: 2000-01-23
       name: Knight Industries
-      externalId: externalId
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      source: gm5
       startDate: 2000-01-23
+  ClientRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Knight Industries
+        description: Human readable name for use in identifying client records.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: Knight Industries
