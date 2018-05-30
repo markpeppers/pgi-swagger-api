@@ -137,7 +137,7 @@ paths:
             $ref: '#/definitions/LegalEntity'
         404:
           description: legal entity not found
-  /corpcust/{id}:
+  /corpCust/{id}:
     get:
       tags:
       - internal
@@ -176,7 +176,7 @@ paths:
           description: corporate customer already deactivated
         404:
           description: corporate customer not found
-  /corpcust/reactivate/{id}:
+  /corpCust/reactivate/{id}:
     put:
       tags:
       - internal
@@ -195,7 +195,7 @@ paths:
           description: corporate customer already active
         404:
           description: corporate customer not found
-  /corpcust:
+  /corpCust:
     post:
       tags:
       - internal
@@ -451,7 +451,7 @@ paths:
           description: bad request
         404:
           description: no legal entities found for given provider
-  /corpcusts/legalEntity/{legalEntityId}:
+  /corpCusts/legalEntity/{legalEntityId}:
     get:
       tags:
       - internal
