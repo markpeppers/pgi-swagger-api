@@ -428,15 +428,15 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
-  /legalEntities:
+  /legalEntities/provider/{providerId}:
     get:
       tags:
       - internal
       summary: get list of all legal entities for a provider
       operationId: getLegalEntities
       parameters:
-      - name: provider
-        in: query
+      - name: providerId
+        in: path
         description: provider id
         required: true
         type: string
@@ -451,7 +451,7 @@ paths:
           description: bad request
         404:
           description: no legal entities found for given provider
-  /corpcusts:
+  /corpcusts/legalEntity/{legalEntityId}:
     get:
       tags:
       - internal
@@ -459,8 +459,8 @@ paths:
       summary: get list of all corporate customers for a legal entity
       operationId: getCorpCusts
       parameters:
-      - name: legalEntity
-        in: query
+      - name: legalEntityId
+        in: path
         description: legal entity id
         required: true
         type: string
@@ -475,7 +475,7 @@ paths:
           description: bad request
         404:
           description: no corporate customers found for given legal entity
-  /companies:
+  /companies/corpCust/{corpCustId}:
     get:
       tags:
       - internal
@@ -483,8 +483,8 @@ paths:
       summary: get list of all companies for a corporate customer
       operationId: getCompanies
       parameters:
-      - name: corpcust
-        in: query
+      - name: corpCustId
+        in: path
         description: corporate customer id
         required: true
         type: string
@@ -544,14 +544,14 @@ paths:
           description: bad request
         404:
           description: no matching clients found
-  /clients/corpcust/{corpcustId}:
+  /clients/corpCust/{corpCustId}:
     get:
       tags:
       - internal
       - external
       summary: get list of clients by corporate customer
       parameters:
-      - name: corpcustId
+      - name: corpCustId
         in: path
         description: corporate customer id
         required: true
