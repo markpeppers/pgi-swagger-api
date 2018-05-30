@@ -23,7 +23,6 @@ paths:
     get:
       tags:
       - internal
-      - external
       summary: Get a Provider by Id
       description: return the requested Provider
       operationId: getProvider
@@ -664,8 +663,9 @@ definitions:
     properties:
       id:
         type: string
-        format: uuid
-        description: System generated UUID
+        format: integer
+        example: "1"
+        description: The Provider Id
       source:
         type: string
         description: Source system
@@ -692,7 +692,7 @@ definitions:
       endDate: 2000-01-23
       name: name
       externalId: externalId
-      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      id: "1"
       source: gm5
       startDate: 2000-01-23
   RestError:
@@ -711,13 +711,13 @@ definitions:
       Error response details
 
       * 1xx - Contract error message
-        * 110 - Contract not found
+        * 120 - Contract not found
       * 2xx - LicenseSet error messages
         * 210 - Max number of licenses reached for this licenseSet
         * 220 - LicenseSet not found
       * 3xx - License and client assignment errors
         * 310 - License is not active
-        * 320 - A client with the given source type already assigned to this license
+        * 325 - A client with the given source type already assigned to this license
         * 35x - Option errors...
           * 350 - Invalid option group (does not exist in parent)
           * 351 - Invalid option value (does not exist as a value in parent licenseSet)
@@ -727,6 +727,7 @@ definitions:
       * 5xx - general errors
         * 500 - Unexpected server error
         * 501 - Missing required values, see extended information
+        * 520 - Provider, legal entity, corporate customer, company, or client not found
   LegalEntity:
     type: object
     properties:
@@ -942,7 +943,7 @@ definitions:
       name:
         type: string
         example: Knight Industries
-        description: Hooman readable name for use in identifying client records.
+        description: Human readable name for use in identifying client records.
       companyId:
         type: string
         description: This client's company
