@@ -228,7 +228,7 @@ paths:
           description: corporate customer not found
           schema:
             $ref: '#/definitions/RestError'
-  /corpCust:
+  /legalEntity/{id}/corpCust:
     post:
       tags:
       - internal
@@ -236,6 +236,11 @@ paths:
       summary: adds a Corporate Customer
       operationId: addCorpCust
       parameters:
+      - name: id
+        in: path
+        description: Legal Entity under which to add the Corporate Customer
+        required: true
+        type: string
       - in: body
         name: newCorpCust
         description: corporate customer to add
@@ -250,39 +255,24 @@ paths:
           schema:
             $ref: '#/definitions/RestError'
   /company/{id}:
-    get:
+    put:
       tags:
       - internal
       - external
-      summary: Get a Company by Id
-      description: return the requested Company
-      operationId: getCompany
+      summary: modifies a Company
+      operationId: modifyCompany
       parameters:
       - name: id
         in: path
-        description: Company Id
+        description: Company to update
         required: true
         type: string
-      responses:
-        200:
-          description: success
-          schema:
-            $ref: '#/definitions/Company'
-        404:
-          description: company not found
-          schema:
-            $ref: '#/definitions/RestError'
-    delete:
-      tags:
-      - internal
-      summary: deactivate a company by Id
-      operationId: deleteCompany
-      parameters:
-      - name: id
-        in: path
-        description: Company Id
+      - in: body
+        name: updatedCompany
+        description: updated company
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/CompanyRequest'
       responses:
         202:
           description: accepted
@@ -309,7 +299,7 @@ paths:
           description: company not found
           schema:
             $ref: '#/definitions/RestError'
-  /company:
+  /corpCust/{id}/company:
     post:
       tags:
       - internal
@@ -317,6 +307,11 @@ paths:
       summary: adds a Company
       operationId: addCompany
       parameters:
+      - name: id
+        in: path
+        description: Corporate Customer Id under which to add the company
+        required: true
+        type: string
       - in: body
         name: newCompany
         description: company to add
@@ -328,26 +323,6 @@ paths:
           description: company created
         400:
           description: invalid input, object invalid
-          schema:
-            $ref: '#/definitions/RestError'
-    put:
-      tags:
-      - internal
-      - external
-      summary: modifies a Company
-      operationId: modifyCompany
-      parameters:
-      - in: body
-        name: updatedCompany
-        description: updated company
-        required: false
-        schema:
-          $ref: '#/definitions/CompanyRequest'
-      responses:
-        202:
-          description: accepted
-        404:
-          description: company not found
           schema:
             $ref: '#/definitions/RestError'
   /client/{id}:
@@ -369,6 +344,26 @@ paths:
           description: success
           schema:
             $ref: '#/definitions/Client'
+        404:
+          description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Client
+      operationId: modifyClient
+      parameters:
+      - in: body
+        name: updatedClient
+        description: updated client
+        required: false
+        schema:
+          $ref: '#/definitions/ClientRequest'
+      responses:
+        200:
+          description: accepted
         404:
           description: client not found
           schema:
@@ -410,7 +405,7 @@ paths:
           description: client not found
           schema:
             $ref: '#/definitions/RestError'
-  /client:
+  /company/{id}/client:
     post:
       tags:
       - internal
@@ -418,6 +413,11 @@ paths:
       summary: adds a Client
       operationId: addClient
       parameters:
+      - name: id
+        in: path
+        description: Company Id under which to create the client
+        required: true
+        type: string
       - in: body
         name: newClient
         description: client to add
@@ -431,34 +431,14 @@ paths:
           description: invalid input, object invalid
           schema:
             $ref: '#/definitions/RestError'
-    put:
-      tags:
-      - internal
-      - external
-      summary: modifies a Client
-      operationId: modifyClient
-      parameters:
-      - in: body
-        name: updatedClient
-        description: updated client
-        required: false
-        schema:
-          $ref: '#/definitions/ClientRequest'
-      responses:
-        200:
-          description: accepted
-        404:
-          description: client not found
-          schema:
-            $ref: '#/definitions/RestError'
-  /legalEntities/provider/{providerId}:
+  /provider/{id}/legalEntities:
     get:
       tags:
       - internal
       summary: get list of all legal entities for a provider
       operationId: getLegalEntities
       parameters:
-      - name: providerId
+      - name: id
         in: path
         description: provider id
         required: true
@@ -478,7 +458,7 @@ paths:
           description: no legal entities found for given provider
           schema:
             $ref: '#/definitions/RestError'
-  /corpCusts/legalEntity/{legalEntityId}:
+  /legalEntity/{id}/corpCusts:
     get:
       tags:
       - internal
@@ -486,7 +466,7 @@ paths:
       summary: get list of all corporate customers for a legal entity
       operationId: getCorpCusts
       parameters:
-      - name: legalEntityId
+      - name: id
         in: path
         description: legal entity id
         required: true
@@ -506,7 +486,7 @@ paths:
           description: no corporate customers found for given legal entity
           schema:
             $ref: '#/definitions/RestError'
-  /companies/corpCust/{corpCustId}:
+  /corpCust/{id}/companies:
     get:
       tags:
       - internal
@@ -514,7 +494,7 @@ paths:
       summary: get list of all companies for a corporate customer
       operationId: getCompanies
       parameters:
-      - name: corpCustId
+      - name: id
         in: path
         description: corporate customer id
         required: true
@@ -534,94 +514,14 @@ paths:
           description: no companies found for given corporate customer
           schema:
             $ref: '#/definitions/RestError'
-  /clients/provider/{providerId}:
-    get:
-      tags:
-      - internal
-      summary: get list of clients by provider
-      parameters:
-      - name: providerId
-        in: path
-        description: provider id
-        required: true
-        type: string
-      responses:
-        200:
-          description: client list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Client'
-        400:
-          description: bad request
-          schema:
-            $ref: '#/definitions/RestError'
-        404:
-          description: no matching clients found
-          schema:
-            $ref: '#/definitions/RestError'
-  /clients/legalEntity/{legalEntityId}:
-    get:
-      tags:
-      - internal
-      - external
-      summary: get list of clients by legal entity
-      parameters:
-      - name: legalEntityId
-        in: path
-        description: legal entity id
-        required: true
-        type: string
-      responses:
-        200:
-          description: client list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Client'
-        400:
-          description: bad request
-          schema:
-            $ref: '#/definitions/RestError'
-        404:
-          description: no matching clients found
-          schema:
-            $ref: '#/definitions/RestError'
-  /clients/corpCust/{corpCustId}:
-    get:
-      tags:
-      - internal
-      - external
-      summary: get list of clients by corporate customer
-      parameters:
-      - name: corpCustId
-        in: path
-        description: corporate customer id
-        required: true
-        type: string
-      responses:
-        200:
-          description: client list
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Client'
-        400:
-          description: bad request
-          schema:
-            $ref: '#/definitions/RestError'
-        404:
-          description: no matching clients found
-          schema:
-            $ref: '#/definitions/RestError'
-  /clients/company/{companyId}:
+  /company/{id}/clients:
     get:
       tags:
       - internal
       - external
       summary: get list of clients by company
       parameters:
-      - name: companyId
+      - name: id
         in: path
         description: company id
         required: true
@@ -852,45 +752,6 @@ definitions:
         postalCode: "30009"
         timeZone: US Eastern
       name: name
-  Company:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-        description: System generated UUID
-      corpcustId:
-        type: string
-        description: The corporate customer this company belongs to.
-      name:
-        type: string
-        description: Human readable name for use in identifying the company.
-      address:
-        $ref: '#/definitions/Address'
-      startDate:
-        type: string
-        format: date
-        description: Date that this company is created
-      endDate:
-        type: string
-        format: date
-        description: If the company is 'deleted', then the end date is set.
-        readOnly: true
-    example:
-      corpcustId: corpcustId
-      address:
-        country: USA
-        address3: address3
-        stateOrProvince: GA
-        address2: address2
-        city: Alpharetta
-        address1: 2300 Lakeview Parkway
-        postalCode: "30009"
-        timeZone: US Eastern
-      endDate: 2000-01-23
-      name: name
-      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-      startDate: 2000-01-23
   CompanyRequest:
     type: object
     properties:
@@ -972,3 +833,42 @@ definitions:
         postalCode: "30009"
         timeZone: US Eastern
       name: Knight Industries
+  Company:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      corpcustId:
+        type: string
+        description: The corporate customer this company belongs to.
+      name:
+        type: string
+        description: Human readable name for use in identifying the company.
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this company is created
+      endDate:
+        type: string
+        format: date
+        description: If the company is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      corpcustId: corpcustId
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      endDate: 2000-01-23
+      name: name
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
