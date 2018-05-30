@@ -166,6 +166,30 @@ paths:
             $ref: '#/definitions/CorpCust'
         404:
           description: corporate customer not found
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Corporate Customer
+      operationId: fCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: corporate customer Id to modify
+        required: true
+      - in: body
+        name: updatedCorpCust
+        description: updated corporate customer
+        required: false
+        schema:
+          $ref: '#/definitions/CorpCustRequest'
+      responses:
+        202:
+          description: accepted
+        404:
+          description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
     delete:
       tags:
       - internal
@@ -222,26 +246,6 @@ paths:
           description: corporate customer created
         400:
           description: invalid input, object invalid
-          schema:
-            $ref: '#/definitions/RestError'
-    put:
-      tags:
-      - internal
-      - external
-      summary: modifies a Corporate Customer
-      operationId: modifyCorpCust
-      parameters:
-      - in: body
-        name: updatedCorpCust
-        description: updated corporate customer
-        required: false
-        schema:
-          $ref: '#/definitions/CorpCustRequest'
-      responses:
-        202:
-          description: accepted
-        404:
-          description: corporate customer not found
           schema:
             $ref: '#/definitions/RestError'
   /company/{id}:
