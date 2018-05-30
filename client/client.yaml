@@ -177,6 +177,7 @@ paths:
         in: path
         description: corporate customer Id to modify
         required: true
+        type: string
       - in: body
         name: updatedCorpCust
         description: updated corporate customer
