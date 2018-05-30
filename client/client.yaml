@@ -109,7 +109,6 @@ paths:
     post:
       tags:
       - internal
-      - external
       summary: adds an Legal Entity
       operationId: addLegalEntity
       parameters:
