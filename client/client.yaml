@@ -40,6 +40,8 @@ paths:
             $ref: '#/definitions/Provider'
         404:
           description: provider not found
+          schema:
+            $ref: '#/definitions/RestError'
   /legalEntity/{id}:
     get:
       tags:
@@ -61,6 +63,8 @@ paths:
             $ref: '#/definitions/LegalEntity'
         404:
           description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
     delete:
       tags:
       - internal
@@ -79,6 +83,8 @@ paths:
           description: legal entity already deactivated
         404:
           description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
   /legalEntity/reactivate/{id}:
     put:
       tags:
@@ -98,6 +104,8 @@ paths:
           description: legal entity already active
         404:
           description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
   /legalEntity:
     post:
       tags:
@@ -117,6 +125,8 @@ paths:
           description: legal entity created
         400:
           description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
     put:
       tags:
       - internal
@@ -137,6 +147,8 @@ paths:
             $ref: '#/definitions/LegalEntity'
         404:
           description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
   /corpCust/{id}:
     get:
       tags:
@@ -176,6 +188,8 @@ paths:
           description: corporate customer already deactivated
         404:
           description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
   /corpCust/reactivate/{id}:
     put:
       tags:
@@ -195,6 +209,8 @@ paths:
           description: corporate customer already active
         404:
           description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
   /corpCust:
     post:
       tags:
@@ -214,6 +230,8 @@ paths:
           description: corporate customer created
         400:
           description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
     put:
       tags:
       - internal
@@ -234,6 +252,8 @@ paths:
             $ref: '#/definitions/CorpCust'
         404:
           description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
   /company/{id}:
     get:
       tags:
@@ -255,6 +275,8 @@ paths:
             $ref: '#/definitions/Company'
         404:
           description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
     delete:
       tags:
       - internal
@@ -273,6 +295,8 @@ paths:
           description: company already deactivated
         404:
           description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
   /company/reactivate/{id}:
     put:
       tags:
@@ -292,6 +316,8 @@ paths:
           description: company already active
         404:
           description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
   /company:
     post:
       tags:
@@ -311,6 +337,8 @@ paths:
           description: company created
         400:
           description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
     put:
       tags:
       - internal
@@ -331,6 +359,8 @@ paths:
             $ref: '#/definitions/Company'
         404:
           description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
   /client/{id}:
     get:
       tags:
@@ -352,6 +382,8 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
     delete:
       tags:
       - internal
@@ -370,6 +402,8 @@ paths:
           description: client already deactivated
         404:
           description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
   /client/reactivate/{id}:
     put:
       tags:
@@ -389,6 +423,8 @@ paths:
           description: client already active
         404:
           description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
   /client:
     post:
       tags:
@@ -408,6 +444,8 @@ paths:
           description: client created
         400:
           description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
     put:
       tags:
       - internal
@@ -428,6 +466,8 @@ paths:
             $ref: '#/definitions/Client'
         404:
           description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
   /legalEntities/provider/{providerId}:
     get:
       tags:
@@ -449,8 +489,12 @@ paths:
               $ref: '#/definitions/LegalEntity'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no legal entities found for given provider
+          schema:
+            $ref: '#/definitions/RestError'
   /corpCusts/legalEntity/{legalEntityId}:
     get:
       tags:
@@ -473,8 +517,12 @@ paths:
               $ref: '#/definitions/CorpCust'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no corporate customers found for given legal entity
+          schema:
+            $ref: '#/definitions/RestError'
   /companies/corpCust/{corpCustId}:
     get:
       tags:
@@ -497,8 +545,12 @@ paths:
               $ref: '#/definitions/Company'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no companies found for given corporate customer
+          schema:
+            $ref: '#/definitions/RestError'
   /clients/provider/{providerId}:
     get:
       tags:
@@ -519,8 +571,12 @@ paths:
               $ref: '#/definitions/Client'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no matching clients found
+          schema:
+            $ref: '#/definitions/RestError'
   /clients/legalEntity/{legalEntityId}:
     get:
       tags:
@@ -542,8 +598,12 @@ paths:
               $ref: '#/definitions/Client'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no matching clients found
+          schema:
+            $ref: '#/definitions/RestError'
   /clients/corpCust/{corpCustId}:
     get:
       tags:
@@ -565,8 +625,12 @@ paths:
               $ref: '#/definitions/Client'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no matching clients found
+          schema:
+            $ref: '#/definitions/RestError'
   /clients/company/{companyId}:
     get:
       tags:
@@ -588,8 +652,12 @@ paths:
               $ref: '#/definitions/Client'
         400:
           description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
         404:
           description: no matching clients found
+          schema:
+            $ref: '#/definitions/RestError'
 definitions:
   Provider:
     type: object
@@ -627,6 +695,38 @@ definitions:
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
       startDate: 2000-01-23
+  RestError:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: System error code (not HTTP status)
+      message:
+        type: string
+        description: Error message
+      extended:
+        type: string
+        description: extended error information (system related)
+    description: |
+      Error response details
+
+      * 1xx - Contract error message
+        * 110 - Contract not found
+      * 2xx - LicenseSet error messages
+        * 210 - Max number of licenses reached for this licenseSet
+        * 220 - LicenseSet not found
+      * 3xx - License and client assignment errors
+        * 310 - License is not active
+        * 320 - A client with the given source type already assigned to this license
+        * 35x - Option errors...
+          * 350 - Invalid option group (does not exist in parent)
+          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
+          * 352 - No option specified for group, and default does not exist
+          * 353 - Multiple default options specified in OptionGroup.
+          * 354 - No default option specified in OptionGroup
+      * 5xx - general errors
+        * 500 - Unexpected server error
+        * 501 - Missing required values, see extended information
   LegalEntity:
     type: object
     properties:
@@ -687,14 +787,7 @@ definitions:
         type: string
         description: Human readable name for use in identifying the corporate customer.
       address:
-        type: object
-        example:
-          address1: 2300 Lakeview Parkway
-          city: Alpharetta
-          stateOrProvince: GA
-          postalCode: 30009
-          country: USA
-        properties: {}
+        $ref: '#/definitions/Address'
       startDate:
         type: string
         format: date
@@ -706,11 +799,15 @@ definitions:
         readOnly: true
     example:
       address:
-        address1: 2300 Lakeview Parkway
-        city: Alpharetta
-        stateOrProvince: GA
-        postalCode: 30009
         country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       legalEntityId: legalEntityId
       endDate: 2000-01-23
       name: name
@@ -718,6 +815,56 @@ definitions:
       id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       source: gm5
       startDate: 2000-01-23
+  Address:
+    type: object
+    required:
+    - address1
+    - city
+    - country
+    - timeZone
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System assigned id for this address
+      address1:
+        type: string
+        example: 2300 Lakeview Parkway
+        description: Address line 1
+      address2:
+        type: string
+        description: Address line 2
+      address3:
+        type: string
+        description: Address line 3
+      city:
+        type: string
+        example: Alpharetta
+      stateOrProvince:
+        type: string
+        example: GA
+        description: Only relevant for states that have states or provinces
+      postalCode:
+        type: string
+        example: "30009"
+        description: ZIP or postal code
+      country:
+        type: string
+        example: USA
+      timeZone:
+        type: string
+        example: US Eastern
+    description: Physical Address
+    example:
+      country: USA
+      address3: address3
+      stateOrProvince: GA
+      address2: address2
+      city: Alpharetta
+      address1: 2300 Lakeview Parkway
+      postalCode: "30009"
+      timeZone: US Eastern
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
   Company:
     type: object
     properties:
@@ -742,14 +889,7 @@ definitions:
         type: string
         description: Human readable name for use in identifying the company.
       address:
-        type: object
-        example:
-          address1: 2300 Lakeview Parkway
-          city: Alpharetta
-          stateOrProvince: GA
-          postalCode: 30009
-          country: USA
-        properties: {}
+        $ref: '#/definitions/Address'
       startDate:
         type: string
         format: date
@@ -762,11 +902,15 @@ definitions:
     example:
       corpcustId: corpcustId
       address:
-        address1: 2300 Lakeview Parkway
-        city: Alpharetta
-        stateOrProvince: GA
-        postalCode: 30009
         country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       endDate: 2000-01-23
       name: name
       externalId: externalId
@@ -803,14 +947,7 @@ definitions:
         type: string
         description: This client's company
       address:
-        type: object
-        example:
-          address1: 2300 Lakeview Parkway
-          city: Alpharetta
-          stateOrProvince: GA
-          postalCode: 30009
-          country: USA
-        properties: {}
+        $ref: '#/definitions/Address'
       startDate:
         type: string
         format: date
@@ -825,11 +962,15 @@ definitions:
     example:
       companyId: companyId
       address:
-        address1: 2300 Lakeview Parkway
-        city: Alpharetta
-        stateOrProvince: GA
-        postalCode: 30009
         country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
       endDate: 2000-01-23
       name: Knight Industries
       externalId: externalId
