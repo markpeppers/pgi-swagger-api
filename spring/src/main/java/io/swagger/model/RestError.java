@@ -14,7 +14,7 @@ import javax.validation.constraints.*;
  */
 @ApiModel(description = "Error response details  * 1xx - Contract error message   * 120 - Contract not found * 2xx - LicenseSet error messages   * 210 - Max number of licenses reached for this licenseSet   * 220 - LicenseSet not found * 3xx - License and client assignment errors   * 310 - License is not active   * 325 - A client is already assigned to this license   * 35x - Option errors...     * 350 - Invalid option group (does not exist in parent)     * 351 - Invalid option value (does not exist as a value in parent licenseSet)     * 352 - No option specified for group, and default does not exist     * 353 - Multiple default options specified in OptionGroup.     * 354 - No default option specified in OptionGroup * 5xx - general errors   * 500 - Unexpected server error   * 501 - Missing required values, see extended information   * 520 - Provider, legal entity, corporate customer, company, or client not found ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-06-26T18:26:46.616Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2018-06-26T18:31:41.974Z")
 
 public class RestError   {
   @JsonProperty("code")
