@@ -1,0 +1,901 @@
+---
+swagger: "2.0"
+info:
+  description: "This is the Contract/License API"
+  version: "1.0.0"
+  title: "PGi Contract/License API"
+  contact:
+    email: "mark.peppers@pgi.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/mpeppers/PGiLicenseManage/1.0.0"
+tags:
+- name: "License Mgmt - external"
+  description: "Operations available to external applications (mavenir)"
+- name: "License Mgmt - internal"
+  description: "Internal api calls that may be used by an internal API (with knowledge\
+    \ of the data system)"
+schemes:
+- "https"
+paths:
+  /contract/legalEntity/{legalEntityId}:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "Get a contract by legal entity id"
+      description: "Get a contract by its UUID"
+      operationId: "getContractByLegalEntity"
+      parameters:
+      - name: "legalEntityId"
+        in: "path"
+        description: "UUID of contract to be fetched"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Contract found"
+          schema:
+            $ref: "#/definitions/Contract"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /contract/provider/{providerId}:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "Get a contract by provider id"
+      description: "Get a contract by its UUID"
+      operationId: "getContractByProvider"
+      parameters:
+      - name: "providerId"
+        in: "path"
+        description: "UUID of contract to be fetched"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Contract found"
+          schema:
+            $ref: "#/definitions/Contract"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /contract/{contractId}/licenseset:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "List all licenseSets for contract"
+      description: "List all license-able components for a particular contract"
+      operationId: "listLicenseSets"
+      parameters:
+      - name: "contractId"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success. If no results found, empty list"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/LicenseSet"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /contract/{contractId}/licenseset/{licenseSetId}:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "Get a specific licenseSet from this contract"
+      description: "Get a specific licenseSet"
+      operationId: "listLicenseSetsByContract"
+      parameters:
+      - name: "contractId"
+        in: "path"
+        description: "Id of the legal entity contract."
+        required: true
+        type: "string"
+      - name: "licenseSetId"
+        in: "path"
+        description: "Id of the License Set."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success."
+          schema:
+            $ref: "#/definitions/LicenseSet"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /contract/{contractId}/licenseset/{licenseSetId}/default:
+    post:
+      tags:
+      - "License Mgmt - external"
+      summary: "Set this License set as the default"
+      description: "Sets the default flag to true for this LicenseSet, and modifies\
+        \ all other\nlicenseSets in this contract as default = false\n"
+      operationId: "contractContractIdLicensesetLicenseSetIdDefaultPOST"
+      parameters:
+      - name: "contractId"
+        in: "path"
+        description: "Id of the legal entity contract."
+        required: true
+        type: "string"
+      - name: "licenseSetId"
+        in: "path"
+        description: "Id of the License Set."
+        required: true
+        type: "string"
+      responses:
+        201:
+          description: "Created"
+        400:
+          description: "Not allowed"
+          schema:
+            $ref: "#/definitions/RestError"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /licenses/search/legalEntity/{legalEntityId}:
+    get:
+      tags:
+      - "License Mgmt - external"
+      operationId: "licensesSearchLegalEntityLegalEntityIdGET"
+      parameters:
+      - name: "legalEntityId"
+        in: "path"
+        description: "Returns all licenses associated with a legal entity"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "success"
+          schema:
+            $ref: "#/definitions/LicenseList"
+        404:
+          description: "not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /license:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "search licenses"
+      description: "Returns all licenses that are visible to the user. Can be filtered\
+        \ to show licenses\nassigned for a specific company (if user has access to\
+        \ multiple companies), by\nlicense set (GM5, Audio, etc), or by\nResult set\
+        \ includes pagination information\n"
+      operationId: "listLicense"
+      parameters:
+      - name: "limit"
+        in: "query"
+        description: "Number of rows to return per page."
+        required: false
+        type: "integer"
+      - name: "page"
+        in: "query"
+        description: "page number (1 based)"
+        required: false
+        type: "integer"
+      - name: "sort"
+        in: "query"
+        description: "sort attributes"
+        required: false
+        type: "string"
+      - name: "dir"
+        in: "query"
+        description: "Sort direction; ascending or descending order. Default: ascending."
+        required: false
+        type: "string"
+        enum:
+        - "asc"
+        - "desc"
+      - name: "companyid"
+        in: "query"
+        description: "filter by companyId"
+        required: false
+        type: "string"
+        format: "uuid"
+      - name: "licensesetid"
+        in: "query"
+        description: "filter by license set id"
+        required: false
+        type: "string"
+        format: "uuid"
+      - name: "activeonly"
+        in: "query"
+        description: "should results include only active license assignments (defaults\
+          \ to true)"
+        required: false
+        type: "boolean"
+        default: true
+      - name: "contractid"
+        in: "query"
+        description: "filter by contract id"
+        required: false
+        type: "string"
+        format: "uuid"
+      - name: "clientid"
+        in: "query"
+        description: "filter by client id"
+        required: false
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/LicenseSet"
+        400:
+          description: "Not allowed"
+          schema:
+            $ref: "#/definitions/RestError"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /license/{licenseId}:
+    get:
+      tags:
+      - "License Mgmt - external"
+      summary: "Get license by id"
+      operationId: "licenseLicenseIdGET"
+      parameters:
+      - name: "licenseId"
+        in: "path"
+        description: "UUID of the license"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/License"
+        404:
+          description: "Not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+  /license/licenseSet/{licenseSetId}:
+    post:
+      tags:
+      - "License Mgmt - external"
+      summary: "Create a new license in the given licenseSet with optional client\
+        \ information"
+      description: "Allows an admin to modify the client assignment of an existing\
+        \ license. If a clientId\nis passed, then the license is assigned to the existing\
+        \ client. If a Client object is\npassed, a new client will be created and\
+        \ assigned.\n"
+      operationId: "newLicense"
+      parameters:
+      - name: "licenseSetId"
+        in: "path"
+        description: "UUID of the licenseSet"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "licenceUpdate"
+        required: true
+        schema:
+          $ref: "#/definitions/LicenseRequest"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/License"
+        400:
+          description: "max licenses already assigned for this licenseSet, or licenseSet\
+            \ not found"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+    put:
+      tags:
+      - "License Mgmt - external"
+      summary: "Change the client currently assigned to this license"
+      description: "This call will change the assigned client information for the\
+        \ source type listed in the request body. It will put an endDate on the previously\
+        \ assigned client based on the startDate of the request body.\n"
+      operationId: "modifyLicense"
+      parameters:
+      - name: "licenseSetId"
+        in: "path"
+        required: true
+        type: "string"
+        format: "uuid"
+      - in: "body"
+        name: "client"
+        required: true
+        schema:
+          $ref: "#/definitions/ClientRequest"
+      responses:
+        200:
+          description: "Success - License reassigned."
+          schema:
+            $ref: "#/definitions/License"
+        400:
+          description: "Error creating license assignment for client (License not\
+            \ active, missing req'd data"
+          schema:
+            $ref: "#/definitions/RestError"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+    delete:
+      tags:
+      - "License Mgmt - external"
+      summary: "Remove all current client assignments from license"
+      description: "if the license model includes a minimum count, and removing the\
+        \ client\ndoes not violate the minimum, (or no minimum) then end the client\
+        \ relationship\nand marks the license as deleted.\n\nIf the license model\
+        \ does have a minimum, and deleting the client violates that,\nthen just marks\
+        \ the client as deleted and leaves the license as active and resets\noptions\
+        \ to defaults (We wouldn't actually expect a min/max license type to have\n\
+        options however...)\n\nIf the license model is an MSA, then delete the license.\n\
+        \n(All deletes are soft-deletes, btw)\n"
+      operationId: "licenseLicenseSetLicenseSetIdDELETE"
+      parameters:
+      - name: "licenseSetId"
+        in: "path"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        200:
+          description: "Success - License assignments removed. License may be marked\
+            \ as deleted."
+          schema:
+            $ref: "#/definitions/License"
+      x-swagger-router-controller: "LicenseMgmtExternal"
+definitions:
+  Contract:
+    type: "object"
+    required:
+    - "contractType"
+    - "default"
+    - "entityId"
+    - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+        description: "System generated UUID. You are not able to create or update\
+          \ this value via the API. It is ignored in all PUT/POST/PATCH methods"
+        readOnly: true
+      name:
+        type: "string"
+        example: "Hosted Voice with Global Meet"
+        maxLength: 256
+      contractType:
+        type: "string"
+        description: "Denotes whether this contract is associated with an legal entity\
+          \ or with a provider"
+        enum:
+        - "legalEntity"
+        - "provider"
+      entityId:
+        type: "string"
+        description: "Id of this contract's associated top-level legal entity or provider,\
+          \ depending on its contractType."
+      default:
+        type: "boolean"
+        description: "Flag to determine if this is the default contract to be used\
+          \ for operations. If you update this flag to\nbe true, then all other contracts\
+          \ belonging to the legal entity will be set to default=false\n"
+    description: "Represents the base Contract (Agreement), which is assigned to an\
+      \ LegalEntity (top level of company\nheirarchy)\n"
+    example:
+      default: true
+      contractType: "legalEntity"
+      name: "Hosted Voice with Global Meet"
+      entityId: "entityId"
+      id: "d290f1ee-6c54-4b01-90e6-d701748f0851"
+  RestError:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        description: "System error code (not HTTP status)"
+      message:
+        type: "string"
+        description: "Error message"
+      extended:
+        type: "string"
+        description: "extended error information (system related)"
+    description: "Error response details\n\n* 1xx - Contract error message\n  * 120\
+      \ - Contract not found\n* 2xx - LicenseSet error messages\n  * 210 - Max number\
+      \ of licenses reached for this licenseSet\n  * 220 - LicenseSet not found\n\
+      * 3xx - License and client assignment errors\n  * 310 - License is not active\n\
+      \  * 325 - A client is already assigned to this license\n  * 35x - Option errors...\n\
+      \    * 350 - Invalid option group (does not exist in parent)\n    * 351 - Invalid\
+      \ option value (does not exist as a value in parent licenseSet)\n    * 352 -\
+      \ No option specified for group, and default does not exist\n    * 353 - Multiple\
+      \ default options specified in OptionGroup.\n    * 354 - No default option specified\
+      \ in OptionGroup\n* 5xx - general errors\n  * 500 - Unexpected server error\n\
+      \  * 501 - Missing required values, see extended information\n  * 520 - Provider,\
+      \ legal entity, corporate customer, company, or client not found\n"
+  LicenseSet:
+    type: "object"
+    required:
+    - "model"
+    - "name"
+    properties:
+      name:
+        type: "string"
+        example: "Global Meet"
+        maxLength: 256
+      id:
+        type: "string"
+        format: "uuid"
+        description: "System generated UUID"
+        readOnly: true
+      contractId:
+        type: "string"
+        description: "Contract to which this sub component (license set) belongs.\
+          \ A single contract may contain multiple, independently licensable products."
+        readOnly: true
+      legalEntityId:
+        type: "string"
+        description: "In the case of a LicenseSet belonging to a Provider Contract,\
+          \ the provider may assign license sets to multpile legal entity."
+        readOnly: true
+      model:
+        type: "string"
+        description: "License model that is applied to the component. Master Service\
+          \ Agreement, fixed license count, min/max license:"
+        enum:
+        - "msa"
+        - "fixed"
+        - "minMax"
+      modelProperties:
+        type: "array"
+        description: "Array of properties that associated to alicense model (i.e.:\
+          \ min, max). Values are dependent on license model used"
+        items:
+          $ref: "#/definitions/Property"
+      features:
+        type: "array"
+        description: "Optional list of features that can be selected during license\
+          \ assignment. "
+        items:
+          $ref: "#/definitions/Feature"
+    example:
+      id: "2352-sdf24-235d9-0heyTh3re"
+      name: "Global Meet Web"
+      contractId: "598e-2kjla4-I3thlkj4"
+      model: "minMax"
+      modelProperties:
+      - min: 30
+        max: 50
+      features:
+      - featureName: "participants"
+        description: "Max web participants"
+        name: "10 Users"
+      default: false
+  Property:
+    type: "object"
+    required:
+    - "name"
+    - "value"
+    properties:
+      name:
+        type: "string"
+      value:
+        type: "string"
+  Feature:
+    type: "object"
+    required:
+    - "description"
+    - "name"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "System assigned name for this feature"
+      name:
+        type: "string"
+        example: "Included Minutes"
+        description: "Human-readable name for this feature"
+      description:
+        type: "string"
+        description: "Human-readable description for this feature"
+      option:
+        type: "string"
+        example: "1000 min"
+        description: "Human-readable option name"
+    description: "Defines a licence-able product's feature or add-on."
+    example:
+      name: "Included Minutes"
+      description: "description"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      option: "1000 min"
+  LicenseList:
+    type: "object"
+    properties:
+      pagination:
+        $ref: "#/definitions/Pagination"
+      results:
+        type: "array"
+        items:
+          $ref: "#/definitions/License"
+    description: "paginated list of matching licenses."
+    example:
+      pagination:
+        last: true
+        size: 5
+        totalPages: 6
+        limit: 1
+        page: 5
+        dir: "dir"
+        totalElements: 0
+      results:
+      - features:
+        - name: "Included Minutes"
+          description: "description"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          option: "1000 min"
+        - name: "Included Minutes"
+          description: "description"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          option: "1000 min"
+        licenseSetId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        companyId: "companyId"
+        endDate: "2000-01-23"
+        canAdd: true
+        licenseAssignments:
+        - companyId: "companyId"
+          address:
+            country: "USA"
+            address3: "address3"
+            stateOrProvince: "GA"
+            address2: "address2"
+            city: "Alpharetta"
+            address1: "2300 Lakeview Parkway"
+            postalCode: "30009"
+            timeZone: "US Eastern"
+          endDate: "2000-01-23"
+          name: "Michael Knight"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          email: "michael.knight@kitt.com"
+          startDate: "2000-01-23"
+        - companyId: "companyId"
+          address:
+            country: "USA"
+            address3: "address3"
+            stateOrProvince: "GA"
+            address2: "address2"
+            city: "Alpharetta"
+            address1: "2300 Lakeview Parkway"
+            postalCode: "30009"
+            timeZone: "US Eastern"
+          endDate: "2000-01-23"
+          name: "Michael Knight"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          email: "michael.knight@kitt.com"
+          startDate: "2000-01-23"
+        licenseId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        startDate: "2000-01-23"
+      - features:
+        - name: "Included Minutes"
+          description: "description"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          option: "1000 min"
+        - name: "Included Minutes"
+          description: "description"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          option: "1000 min"
+        licenseSetId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        companyId: "companyId"
+        endDate: "2000-01-23"
+        canAdd: true
+        licenseAssignments:
+        - companyId: "companyId"
+          address:
+            country: "USA"
+            address3: "address3"
+            stateOrProvince: "GA"
+            address2: "address2"
+            city: "Alpharetta"
+            address1: "2300 Lakeview Parkway"
+            postalCode: "30009"
+            timeZone: "US Eastern"
+          endDate: "2000-01-23"
+          name: "Michael Knight"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          email: "michael.knight@kitt.com"
+          startDate: "2000-01-23"
+        - companyId: "companyId"
+          address:
+            country: "USA"
+            address3: "address3"
+            stateOrProvince: "GA"
+            address2: "address2"
+            city: "Alpharetta"
+            address1: "2300 Lakeview Parkway"
+            postalCode: "30009"
+            timeZone: "US Eastern"
+          endDate: "2000-01-23"
+          name: "Michael Knight"
+          id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+          email: "michael.knight@kitt.com"
+          startDate: "2000-01-23"
+        licenseId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        startDate: "2000-01-23"
+  Pagination:
+    type: "object"
+    properties:
+      last:
+        type: "boolean"
+        description: "is last page?"
+      totalElements:
+        type: "integer"
+        description: "total rows that matched search criteria"
+      totalPages:
+        type: "integer"
+        description: "total number of pages in search results"
+      limit:
+        type: "integer"
+        description: "number or rows per page in original search criteria"
+      size:
+        type: "integer"
+        description: "number of items in the current page"
+      page:
+        type: "integer"
+        description: "current page number"
+      dir:
+        type: "string"
+        description: "sort criteria in request"
+    example:
+      last: true
+      size: 5
+      totalPages: 6
+      limit: 1
+      page: 5
+      dir: "dir"
+      totalElements: 0
+  License:
+    type: "object"
+    required:
+    - "licenseSetId"
+    properties:
+      licenseId:
+        type: "string"
+        format: "uuid"
+        description: "System generated UUID for the billable license "
+      licenseSetId:
+        type: "string"
+        format: "uuid"
+        description: "License set id"
+      companyId:
+        type: "string"
+      startDate:
+        type: "string"
+        format: "date"
+        description: "Date that this license assignment is in effect."
+      endDate:
+        type: "string"
+        format: "date"
+        description: "Date that this license assignment ends (delete)"
+      features:
+        type: "array"
+        description: "Optional array of license features, if applicable\n"
+        items:
+          $ref: "#/definitions/Feature"
+      canAdd:
+        type: "boolean"
+        description: "There are additional licenses that can be assigned in this set.\
+          \ (Based on license model and current data.) This will need to allow for\
+          \ different licensing models (min/max, msa, fixed) and take into account\
+          \ both number of assigned licenses and number of unassigned licenses as\
+          \ part of the calculation.\n"
+      licenseAssignments:
+        type: "array"
+        description: "License Assignments represent the recent history of all client\n\
+          Ids that have been assigned to this license. These records\nare primary\
+          \ used by Mediation Clients to map received CDR data\nto the appropriate\
+          \ billable license\n"
+        items:
+          $ref: "#/definitions/Client"
+    example:
+      features:
+      - name: "Included Minutes"
+        description: "description"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        option: "1000 min"
+      - name: "Included Minutes"
+        description: "description"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        option: "1000 min"
+      licenseSetId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      companyId: "companyId"
+      endDate: "2000-01-23"
+      canAdd: true
+      licenseAssignments:
+      - companyId: "companyId"
+        address:
+          country: "USA"
+          address3: "address3"
+          stateOrProvince: "GA"
+          address2: "address2"
+          city: "Alpharetta"
+          address1: "2300 Lakeview Parkway"
+          postalCode: "30009"
+          timeZone: "US Eastern"
+        endDate: "2000-01-23"
+        name: "Michael Knight"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        email: "michael.knight@kitt.com"
+        startDate: "2000-01-23"
+      - companyId: "companyId"
+        address:
+          country: "USA"
+          address3: "address3"
+          stateOrProvince: "GA"
+          address2: "address2"
+          city: "Alpharetta"
+          address1: "2300 Lakeview Parkway"
+          postalCode: "30009"
+          timeZone: "US Eastern"
+        endDate: "2000-01-23"
+        name: "Michael Knight"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        email: "michael.knight@kitt.com"
+        startDate: "2000-01-23"
+      licenseId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      startDate: "2000-01-23"
+  Client:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+        description: "System generated UUID"
+      name:
+        type: "string"
+        example: "Michael Knight"
+        description: "The client's name"
+      companyId:
+        type: "string"
+        description: "This client's company"
+      email:
+        type: "string"
+        format: "email"
+        example: "michael.knight@kitt.com"
+        description: "The client's email address"
+      address:
+        $ref: "#/definitions/Address"
+      startDate:
+        type: "string"
+        format: "date"
+        description: "Date that this client is assigned to the current license"
+      endDate:
+        type: "string"
+        format: "date"
+        description: "If the client assignment to the license is 'deleted', then the\
+          \ end date\nis set.\n"
+        readOnly: true
+    example:
+      companyId: "companyId"
+      address:
+        country: "USA"
+        address3: "address3"
+        stateOrProvince: "GA"
+        address2: "address2"
+        city: "Alpharetta"
+        address1: "2300 Lakeview Parkway"
+        postalCode: "30009"
+        timeZone: "US Eastern"
+      endDate: "2000-01-23"
+      name: "Michael Knight"
+      id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      email: "michael.knight@kitt.com"
+      startDate: "2000-01-23"
+  Address:
+    type: "object"
+    required:
+    - "address1"
+    - "city"
+    - "country"
+    - "timeZone"
+    properties:
+      address1:
+        type: "string"
+        example: "2300 Lakeview Parkway"
+        description: "Address line 1"
+      address2:
+        type: "string"
+        description: "Address line 2"
+      address3:
+        type: "string"
+        description: "Address line 3"
+      city:
+        type: "string"
+        example: "Alpharetta"
+      stateOrProvince:
+        type: "string"
+        example: "GA"
+        description: "Only relevant for states that have states or provinces"
+      postalCode:
+        type: "string"
+        example: "30009"
+        description: "ZIP or postal code"
+      country:
+        type: "string"
+        example: "USA"
+      timeZone:
+        type: "string"
+        example: "US Eastern"
+    description: "Physical Address"
+    example:
+      country: "USA"
+      address3: "address3"
+      stateOrProvince: "GA"
+      address2: "address2"
+      city: "Alpharetta"
+      address1: "2300 Lakeview Parkway"
+      postalCode: "30009"
+      timeZone: "US Eastern"
+  ClientRequest:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        example: "Knight Industries"
+        description: "Human readable name for use in identifying client records."
+      address:
+        $ref: "#/definitions/Address"
+    example:
+      address:
+        country: "USA"
+        address3: "address3"
+        stateOrProvince: "GA"
+        address2: "address2"
+        city: "Alpharetta"
+        address1: "2300 Lakeview Parkway"
+        postalCode: "30009"
+        timeZone: "US Eastern"
+      name: "Knight Industries"
+  LicenseRequest:
+    type: "object"
+    properties:
+      clientId:
+        type: "string"
+        format: "uuid"
+      client:
+        $ref: "#/definitions/Client"
+    example:
+      clientId: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+      client:
+        companyId: "companyId"
+        address:
+          country: "USA"
+          address3: "address3"
+          stateOrProvince: "GA"
+          address2: "address2"
+          city: "Alpharetta"
+          address1: "2300 Lakeview Parkway"
+          postalCode: "30009"
+          timeZone: "US Eastern"
+        endDate: "2000-01-23"
+        name: "Michael Knight"
+        id: "046b6c7f-0b8a-43b9-b35d-6489e6daee91"
+        email: "michael.knight@kitt.com"
+        startDate: "2000-01-23"
