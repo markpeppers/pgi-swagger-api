@@ -1,0 +1,874 @@
+---
+swagger: "2.0"
+info:
+  description: This is the PGi Client API
+  version: 1.0.0
+  title: PGi Client API
+  contact:
+    email: mark.peppers@pgi.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: virtserver.swaggerhub.com
+basePath: /mpeppers/PGiClientAPI/1.0.0
+tags:
+- name: internal
+  description: Internal PGi admin calls
+- name: external
+  description: API calls available to external resources
+schemes:
+- https
+paths:
+  /provider/{id}:
+    get:
+      tags:
+      - internal
+      summary: Get a Provider by Id
+      description: return the requested Provider
+      operationId: getProvider
+      parameters:
+      - name: id
+        in: path
+        description: Provider Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Provider'
+        404:
+          description: provider not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /legalEntity/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get a Legal Entity by Id
+      description: return the requested Legal Entity
+      operationId: getLegalEntity
+      parameters:
+      - name: id
+        in: path
+        description: Legal Entity Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/LegalEntity'
+        404:
+          description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
+    delete:
+      tags:
+      - internal
+      summary: deactivate a legal entity by Id
+      operationId: deleteLegalEntity
+      parameters:
+      - name: id
+        in: path
+        description: Legal Entity Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: legal entity already deactivated
+        404:
+          description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /legalEntity/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate an Legal Entity by Id
+      operationId: reactivateLegalEntity
+      parameters:
+      - name: id
+        in: path
+        description: Legal Entity Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+        202:
+          description: legal entity already active
+        404:
+          description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /legalEntity:
+    post:
+      tags:
+      - internal
+      summary: adds an Legal Entity
+      operationId: addLegalEntity
+      parameters:
+      - in: body
+        name: newLegalEntity
+        description: legal entity to add
+        required: false
+        schema:
+          $ref: '#/definitions/LegalEntityRequest'
+      responses:
+        201:
+          description: legal entity created
+        400:
+          description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies an Legal Entity
+      operationId: modifyLegalEntity
+      parameters:
+      - in: body
+        name: updatedLegalEntity
+        description: updated legal entity
+        required: false
+        schema:
+          $ref: '#/definitions/LegalEntityRequest'
+      responses:
+        202:
+          description: accepted
+        404:
+          description: legal entity not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /corpCust/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get a Corporate Customer by Id
+      description: return the requested Corporate Customer
+      operationId: getCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: Corporate Customer Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/CorpCust'
+        404:
+          description: corporate customer not found
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Corporate Customer
+      operationId: fCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: corporate customer Id to modify
+        required: true
+        type: string
+      - in: body
+        name: updatedCorpCust
+        description: updated corporate customer
+        required: false
+        schema:
+          $ref: '#/definitions/CorpCustRequest'
+      responses:
+        202:
+          description: accepted
+        404:
+          description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
+    delete:
+      tags:
+      - internal
+      summary: deactivate a corporate customer by Id
+      operationId: deleteCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: Corporate Customer Id
+        required: true
+        type: string
+      responses:
+        202:
+          description: accepted
+        404:
+          description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /corpCust/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate a Corporate Customer by Id
+      operationId: reactivateCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: Corporate Customer Id
+        required: true
+        type: string
+      responses:
+        202:
+          description: accepted
+        404:
+          description: corporate customer not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /legalEntity/{id}/corpCust:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds a Corporate Customer
+      operationId: addCorpCust
+      parameters:
+      - name: id
+        in: path
+        description: Legal Entity under which to add the Corporate Customer
+        required: true
+        type: string
+      - in: body
+        name: newCorpCust
+        description: corporate customer to add
+        required: false
+        schema:
+          $ref: '#/definitions/CorpCustRequest'
+      responses:
+        201:
+          description: corporate customer created
+        400:
+          description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
+  /company/{id}:
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Company
+      operationId: modifyCompany
+      parameters:
+      - name: id
+        in: path
+        description: Company to update
+        required: true
+        type: string
+      - in: body
+        name: updatedCompany
+        description: updated company
+        required: true
+        schema:
+          $ref: '#/definitions/CompanyRequest'
+      responses:
+        202:
+          description: accepted
+        404:
+          description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /company/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate a Company by Id
+      operationId: reactivateCompany
+      parameters:
+      - name: id
+        in: path
+        description: Company Id
+        required: true
+        type: string
+      responses:
+        202:
+          description: accepted
+        404:
+          description: company not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /corpCust/{id}/company:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds a Company
+      operationId: addCompany
+      parameters:
+      - name: id
+        in: path
+        description: Corporate Customer Id under which to add the company
+        required: true
+        type: string
+      - in: body
+        name: newCompany
+        description: company to add
+        required: false
+        schema:
+          $ref: '#/definitions/CompanyRequest'
+      responses:
+        201:
+          description: company created
+        400:
+          description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
+  /client/{id}:
+    get:
+      tags:
+      - internal
+      - external
+      summary: Get a Client by Id
+      description: return the requested Client
+      operationId: getClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        200:
+          description: success
+          schema:
+            $ref: '#/definitions/Client'
+        404:
+          description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
+    put:
+      tags:
+      - internal
+      - external
+      summary: modifies a Client
+      operationId: modifyClient
+      parameters:
+      - in: body
+        name: updatedClient
+        description: updated client
+        required: false
+        schema:
+          $ref: '#/definitions/ClientRequest'
+      responses:
+        200:
+          description: accepted
+        404:
+          description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
+    delete:
+      tags:
+      - internal
+      summary: deactivate a client by Id
+      operationId: deleteClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        202:
+          description: accepted
+        404:
+          description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /client/reactivate/{id}:
+    put:
+      tags:
+      - internal
+      summary: reactivate a Client by Id
+      operationId: reactivateClient
+      parameters:
+      - name: id
+        in: path
+        description: Client Id
+        required: true
+        type: string
+      responses:
+        202:
+          description: accepted
+        404:
+          description: client not found
+          schema:
+            $ref: '#/definitions/RestError'
+  /company/{id}/client:
+    post:
+      tags:
+      - internal
+      - external
+      summary: adds a Client
+      operationId: addClient
+      parameters:
+      - name: id
+        in: path
+        description: Company Id under which to create the client
+        required: true
+        type: string
+      - in: body
+        name: newClient
+        description: client to add
+        required: false
+        schema:
+          $ref: '#/definitions/ClientRequest'
+      responses:
+        201:
+          description: client created
+        400:
+          description: invalid input, object invalid
+          schema:
+            $ref: '#/definitions/RestError'
+  /provider/{id}/legalEntities:
+    get:
+      tags:
+      - internal
+      summary: get list of all legal entities for a provider
+      operationId: getLegalEntities
+      parameters:
+      - name: id
+        in: path
+        description: provider id
+        required: true
+        type: string
+      responses:
+        200:
+          description: legal entities list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LegalEntity'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
+        404:
+          description: no legal entities found for given provider
+          schema:
+            $ref: '#/definitions/RestError'
+  /legalEntity/{id}/corpCusts:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all corporate customers for a legal entity
+      operationId: getCorpCusts
+      parameters:
+      - name: id
+        in: path
+        description: legal entity id
+        required: true
+        type: string
+      responses:
+        200:
+          description: corporate customer list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CorpCust'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
+        404:
+          description: no corporate customers found for given legal entity
+          schema:
+            $ref: '#/definitions/RestError'
+  /corpCust/{id}/companies:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of all companies for a corporate customer
+      operationId: getCompanies
+      parameters:
+      - name: id
+        in: path
+        description: corporate customer id
+        required: true
+        type: string
+      responses:
+        200:
+          description: company list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Company'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
+        404:
+          description: no companies found for given corporate customer
+          schema:
+            $ref: '#/definitions/RestError'
+  /company/{id}/clients:
+    get:
+      tags:
+      - internal
+      - external
+      summary: get list of clients by company
+      parameters:
+      - name: id
+        in: path
+        description: company id
+        required: true
+        type: string
+      responses:
+        200:
+          description: client list
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+        400:
+          description: bad request
+          schema:
+            $ref: '#/definitions/RestError'
+        404:
+          description: no matching clients found
+          schema:
+            $ref: '#/definitions/RestError'
+definitions:
+  Provider:
+    type: object
+    properties:
+      id:
+        type: string
+        format: integer
+        example: "1"
+        description: The Provider Id
+      name:
+        type: string
+        description: Human readable name for use in identifying the provider.
+      startDate:
+        type: string
+        format: date
+        description: Date that this provider is created
+      endDate:
+        type: string
+        format: date
+        description: If the provider is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      endDate: 2000-01-23
+      name: name
+      id: "1"
+      startDate: 2000-01-23
+  RestError:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: System error code (not HTTP status)
+      message:
+        type: string
+        description: Error message
+      extended:
+        type: string
+        description: extended error information (system related)
+    description: |
+      Error response details
+
+      * 1xx - Contract error message
+        * 120 - Contract not found
+      * 2xx - LicenseSet error messages
+        * 210 - Max number of licenses reached for this licenseSet
+        * 220 - LicenseSet not found
+      * 3xx - License and client assignment errors
+        * 310 - License is not active
+        * 325 - A client with the given source type already assigned to this license
+        * 35x - Option errors...
+          * 350 - Invalid option group (does not exist in parent)
+          * 351 - Invalid option value (does not exist as a value in parent licenseSet)
+          * 352 - No option specified for group, and default does not exist
+          * 353 - Multiple default options specified in OptionGroup.
+          * 354 - No default option specified in OptionGroup
+      * 5xx - general errors
+        * 500 - Unexpected server error
+        * 501 - Missing required values, see extended information
+        * 520 - Provider, legal entity, corporate customer, company, or client not found
+  LegalEntity:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      name:
+        type: string
+        description: Human readable name for use in identifying the legal entity.
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this legal entity is created
+      endDate:
+        type: string
+        format: date
+        description: If the legal entity is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      endDate: 2000-01-23
+      name: name
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
+  Address:
+    type: object
+    required:
+    - address1
+    - city
+    - country
+    - timeZone
+    properties:
+      address1:
+        type: string
+        example: 2300 Lakeview Parkway
+        description: Address line 1
+      address2:
+        type: string
+        description: Address line 2
+      address3:
+        type: string
+        description: Address line 3
+      city:
+        type: string
+        example: Alpharetta
+      stateOrProvince:
+        type: string
+        example: GA
+        description: Only relevant for states that have states or provinces
+      postalCode:
+        type: string
+        example: "30009"
+        description: ZIP or postal code
+      country:
+        type: string
+        example: USA
+      timeZone:
+        type: string
+        example: US Eastern
+    description: Physical Address
+    example:
+      country: USA
+      address3: address3
+      stateOrProvince: GA
+      address2: address2
+      city: Alpharetta
+      address1: 2300 Lakeview Parkway
+      postalCode: "30009"
+      timeZone: US Eastern
+  LegalEntityRequest:
+    properties:
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+  CorpCust:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      legalEntityId:
+        type: string
+        description: The legal entity this corporate customer is under.
+      name:
+        type: string
+        description: Human readable name for use in identifying the corporate customer.
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this corporate customer is created
+      endDate:
+        type: string
+        format: date
+        description: If the corporate customer is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      legalEntityId: legalEntityId
+      endDate: 2000-01-23
+      name: name
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
+  CorpCustRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Human Readable namd for use in identifying the corporate customer.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: name
+  CompanyRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Human readable name for use in identifying the company.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: name
+  Client:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      name:
+        type: string
+        example: Knight Industries
+        description: Human readable name for use in identifying client records.
+      companyId:
+        type: string
+        description: This client's company
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this client is assigned to the current license
+      endDate:
+        type: string
+        format: date
+        description: |
+          If the client assignment to the license is 'deleted', then the end date
+          is set.
+        readOnly: true
+    example:
+      companyId: companyId
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      endDate: 2000-01-23
+      name: Knight Industries
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
+  ClientRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Knight Industries
+        description: Human readable name for use in identifying client records.
+      address:
+        $ref: '#/definitions/Address'
+    example:
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      name: Knight Industries
+  Company:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: System generated UUID
+      corpcustId:
+        type: string
+        description: The corporate customer this company belongs to.
+      name:
+        type: string
+        description: Human readable name for use in identifying the company.
+      address:
+        $ref: '#/definitions/Address'
+      startDate:
+        type: string
+        format: date
+        description: Date that this company is created
+      endDate:
+        type: string
+        format: date
+        description: If the company is 'deleted', then the end date is set.
+        readOnly: true
+    example:
+      corpcustId: corpcustId
+      address:
+        country: USA
+        address3: address3
+        stateOrProvince: GA
+        address2: address2
+        city: Alpharetta
+        address1: 2300 Lakeview Parkway
+        postalCode: "30009"
+        timeZone: US Eastern
+      endDate: 2000-01-23
+      name: name
+      id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      startDate: 2000-01-23
